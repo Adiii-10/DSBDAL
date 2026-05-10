@@ -1,0 +1,54 @@
+import nltk
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
+nltk.download('punkt')
+nltk.download('punkt_tab')
+nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+nltk.download('averaged_perceptron_tagger_eng')
+
+
+document = """The quick brown fox jumps over the lazy dog.
+Dogs are jumping and playing in the garden."""
+print("Original Document:", document)
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+
+
+tokens = word_tokenize(document.lower())
+
+
+pos_tags = nltk.pos_tag(tokens)
+
+
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [w for w in tokens if w.isalnum() and w not in stop_words]
+
+
+ps = PorterStemmer()
+stemmed = [ps.stem(w) for w in filtered_tokens]
+
+
+lemmatizer = WordNetLemmatizer()
+lemmatized = [lemmatizer.lemmatize(w) for w in filtered_tokens]
+
+
+print("\nTokens:", tokens)
+print("\nPOS Tags:", pos_tags)
+print("\nFiltered (No Stopwords):", filtered_tokens)
+print("\nStemmed:", stemmed)
+print("\nLemmatized:", lemmatized)
+
+
+docs = [document]
+vectorizer = TfidfVectorizer()
+tfidf_matrix = vectorizer.fit_transform(docs)
+df_tfidf = pd.DataFrame(tfidf_matrix.toarray(),
+                        columns=vectorizer.get_feature_names_out())
+print("\nTF-IDF Representation:")
+print(df_tfidf)

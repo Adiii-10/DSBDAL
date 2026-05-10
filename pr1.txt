@@ -1,0 +1,33 @@
+import pandas as pd
+import numpy as np
+
+
+df = pd.read_csv('Iris Dataset Prac (1,3.2,6,10).csv')
+
+
+print("1. Dimensions of Data:", df.shape)
+
+print("\n2. Missing Values:\n", df.isnull().sum())
+
+print("\n3. Statistical Summary:\n", df.describe())
+
+print("\n4. Variable Types:\n", df.dtypes)
+
+
+df['Id'] = df['Id'].astype(int)
+
+
+numeric_cols = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
+
+
+for col in numeric_cols:
+    df[col] = (df[col] - df[col].min()) / (df[col].max() - df[col].min())
+
+
+print("\n5. Data after Normalization:\n", df.head())
+
+
+df_encoded = pd.get_dummies(df, columns=['Species'])
+
+
+print("\n6. Encoded Data:\n", df_encoded.head())

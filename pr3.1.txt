@@ -1,0 +1,19 @@
+import pandas as pd
+
+
+df = pd.read_csv('adult (3.1).csv')
+
+
+summary_stats = df.groupby('income')['age'].agg(['mean', 'median', 'min', 'max', 'std'])
+print("--- Summary Statistics of Age Grouped by Income ---")
+print(summary_stats)
+
+
+income_categories = summary_stats.index.tolist()
+mean_age_list = summary_stats['mean'].tolist()
+print("\nIncome Categories:", income_categories)
+print("Mean Age List:", mean_age_list)
+
+
+mapping = dict(zip(income_categories, mean_age_list))
+print("\nIncome vs Mean Age Mapping:", mapping)

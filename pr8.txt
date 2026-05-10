@@ -1,0 +1,15 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+df = sns.load_dataset('titanic')
+
+
+df = df.dropna(subset=['fare'])
+
+
+sns.histplot(data=df, x='fare', bins=30, kde=True)
+plt.title('Distribution of Ticket Fare for Titanic Passengers')
+plt.xlabel('Fare (Ticket Price)')
+plt.ylabel('Frequency')
+plt.show()
