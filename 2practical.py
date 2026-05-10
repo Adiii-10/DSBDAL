@@ -23,10 +23,6 @@ data.columns
 
 data.isnull().sum()
 
-for i in data['Roll no '].iteritems():
-    data['Roll no '][i[0]] = data['Roll no '][i[0]][-3:]
-data.head()
-
 sns.boxplot(y=data['First year:   Sem 1'])
 
 sns.boxplot(y=data['First year:   Sem 2'])
