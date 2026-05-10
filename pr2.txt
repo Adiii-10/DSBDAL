@@ -1,32 +1,48 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt 
 import seaborn as sns
-%matplotlib inline
+import matplotlib.pyplot as plt
 
-data = pd.read_csv("tecdiv.csv")
 
-data
+df = pd.read_csv("tecdiv.csv")
 
-print("The first five rows are as follows: ")
-data.head()
 
-print("The last five rows are as follows: ")
-data.tail()
+print("Missing Values:\n", df.isnull().sum())
 
-data.describe()
 
-data.info()
+df.fillna(df.mean(numeric_only=True), inplace=True)
 
-print("The column names of the dataset are as follows: ")
-data.columns
 
-data.isnull().sum()
+def remove_outliers(col):
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
 
-sns.boxplot(y=data['First year:   Sem 1'])
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
 
-sns.boxplot(y=data['First year:   Sem 2'])
+    df[col] = np.where(df[col] < lower, lower,
+                       np.where(df[col] > upper, upper, df[col]))
 
-sns.boxplot(y=data["Second year:   Sem 1"])
 
-sns.boxplot(y=data["Second year:   Sem 2"])
+
+numeric_cols = df.select_dtypes(include=np.number).columns
+for col in numeric_cols:
+    remove_outliers(col)
+for col in numeric_cols:
+    sns.boxplot(y=df[col])
+    plt.title(f'Boxplot of {col}')
+    plt.show()
+
+
+
+df['Transformed_Sem1'] = np.log1p(df[numeric_cols[0]])
+
+
+sns.histplot(df['Transformed_Sem1'], kde=True)
+plt.title('Transformed Variable Distribution')
+plt.show()
+
+
+print("\nFinal Dataset Info:")
+print(df.info())
