@@ -1,0 +1,572 @@
+Data Visualization III Download the Iris flower dataset or any other dataset into a DataFrame. (eg https://archive.ics.uci.edu/ml/datasets/Iris ). Scan the dataset and give the inference as: 1. How many features are there and what are their types (e.g., numeric, nominal)? 2. Create a histogram for each feature in the dataset to illustrate the feature distributions. 3. Create a boxplot for each feature in the dataset. Compare distributions and identify outliers 
+
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# -------------------------------
+# Load Dataset
+# -------------------------------
+df = sns.load_dataset('iris')
+
+# -------------------------------
+# Dataset Information
+# -------------------------------
+print("--- Dataset Information ---")
+df.info()
+
+print("\nTotal Features:", df.shape[1])
+
+print("\nData Types:\n", df.dtypes)
+
+# -------------------------------
+# Histogram for Each Feature
+# -------------------------------
+df.hist(figsize=(10, 8))
+plt.suptitle("Histogram of Features")
+plt.tight_layout()
+plt.show()
+
+# -------------------------------
+# Boxplot for Each Feature
+# -------------------------------
+df.plot(kind='box', subplots=True, layout=(2, 2), figsize=(10, 8))
+plt.suptitle("Boxplot of Features")
+plt.tight_layout()
+plt.show()
+
+# -------------------------------
+# Outlier Detection (IQR Method)
+# -------------------------------
+print("\n--- Outlier Detection (IQR Method) ---")
+
+for col in df.select_dtypes(include=['float64']).columns:
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+
+    outliers = df[(df[col] < (Q1 - 1.5 * IQR)) |
+                  (df[col] > (Q3 + 1.5 * IQR))]
+
+    print(f"{col}: {len(outliers)} outliers")
+
+
+
+
+
+🔷 Question-wise Explanation
+✅ 1. Load Dataset
+df = sns.load_dataset('iris')
+
+✔ Loads Iris dataset
+✔ Contains 150 rows
+
+🔹 Features:
+Sepal Length
+Sepal Width
+Petal Length
+Petal Width
+Species
+✅ 2. Dataset Information
+df.info()
+df.shape
+df.dtypes
+
+✔ Displays:
+
+Number of features
+Data types
+✔ Answer:
+Total features = 5
+Numeric = 4
+Categorical = 1 (species)
+✅ 3. Histogram
+df.hist()
+
+✔ Plots histogram for each feature
+
+✔ Why used:
+➡️ Shows distribution of data
+
+✅ 4. Boxplot
+df.plot(kind='box', subplots=True)
+
+✔ Shows spread and outliers
+
+✔ Why used:
+➡️ Compare distributions
+
+✅ 5. Outlier Detection
+IQR method
+
+✔ Formula:
+
+IQR = Q3 - Q1
+Lower = Q1 - 1.5×IQR
+Upper = Q3 + 1.5×IQR
+
+✔ Why used:
+➡️ Detect extreme values
+
+
+
+
+
+📘 DETAILED THEORY (High-Scoring Answer)
+Introduction
+
+Data visualization is an important step in data analysis that helps in understanding the structure, distribution, and patterns of data. In this practical, the Iris dataset is analyzed using histograms and boxplots to study feature distributions and detect outliers.
+
+The Iris dataset is a well-known dataset used for classification problems and contains measurements of iris flowers.
+
+1. Dataset Description
+
+The dataset contains 5 features:
+
+🔹 Numerical Features:
+Sepal Length
+Sepal Width
+Petal Length
+Petal Width
+🔹 Categorical Feature:
+Species (Setosa, Versicolor, Virginica)
+2. Histogram
+
+A histogram is used to show the frequency distribution of numerical data.
+
+Purpose:
+Understand data distribution
+Identify skewness
+Detect patterns
+3. Boxplot
+
+A boxplot represents data using five-number summary:
+
+Minimum
+Q1
+Median
+Q3
+Maximum
+Purpose:
+Compare distributions
+Identify outliers
+4. Outlier Detection using IQR
+
+Outliers are extreme values that deviate from normal data.
+
+IQR Method:
+IQR=Q3−Q1
+Lower=Q1−1.5×IQR
+Upper=Q3+1.5×IQR
+
+Values outside this range are considered outliers.
+
+🔷 📊 Inference (VERY IMPORTANT FOR EXAM)
+🔹 1. Feature Types
+4 numerical features
+1 categorical feature
+🔹 2. Histogram Observations
+Sepal features → moderately spread
+Petal features → clearly separated distributions
+Petal length shows distinct clustering → useful for classification
+🔹 3. Boxplot Observations
+Petal features have less overlap
+Sepal width shows more variation
+Median values differ across features
+🔹 4. Outliers
+Few outliers present (mainly in sepal width)
+Petal features have fewer outliers
+🔹 5. Key Insight
+
+➡️ Petal length and petal width are more important features for classification
+
+🔹 6. Distribution Comparison
+Petal features → more consistent
+Sepal features → more spread and variation
+
+Advantages of Visualization
+Easy understanding of data
+Detect patterns and anomalies
+Helps in feature selection
+
+Applications
+Data preprocessing
+Machine learning
+Statistical analysis
+Conclusion
+
+In this practical, the Iris dataset was analyzed using histograms and boxplots. The distributions of features were studied, and outliers were identified using the IQR method. It was observed that petal features are more useful for classification, while sepal features show more variation. Visualization techniques help in better understanding and preparing data for analysis.
+
+
+
+
+
+1. Linear Regression
+
+Linear regression is a supervised machine learning algorithm used to predict a continuous numeric value.
+
+It finds a best-fit straight line between input (X) and output (Y).
+
+Equation:
+
+Y = mX + c
+
+Meaning:
+
+X → input (independent variable)
+
+Y → output (dependent variable)
+
+m → slope (change rate)
+
+c → intercept
+
+
+Example:
+
+Predict house price based on number of rooms.
+
+Key point:
+
+👉 It assumes a linear relationship between variables.
+
+
+---
+
+📘 2. Logistic Regression
+
+Logistic regression is used for classification problems (yes/no, 0/1).
+
+It uses the sigmoid function to convert output into probability.
+
+Output range:
+
+0 to 1
+
+Formula idea:
+
+P = \frac{1}{1 + e^{-x}}
+
+Example:
+
+Spam or not spam
+
+Purchased or not purchased
+
+
+Key point:
+
+👉 Despite the name “regression”, it is used for classification.
+
+
+---
+
+📘 3. Outliers
+
+Outliers are data points that are very different from other observations.
+
+Example:
+
+Most ages = 20–40, but one value = 120 → outlier
+
+Detection methods:
+
+IQR method
+
+Z-score method
+
+
+IQR rule:
+
+Below Q1 − 1.5×IQR → outlier
+
+Above Q3 + 1.5×IQR → outlier
+
+
+Key point:
+
+👉 Outliers can distort mean and ML models.
+
+
+---
+
+📘 4. Confusion Matrix
+
+A confusion matrix is used to evaluate classification models.
+
+It shows correct and incorrect predictions.
+
+Structure:
+
+	Predicted Yes	Predicted No
+
+Actual Yes	TP	FN
+Actual No	FP	TN
+
+
+Terms:
+
+TP → True Positive
+
+TN → True Negative
+
+FP → False Positive
+
+FN → False Negative
+
+
+Key point:
+
+👉 It helps measure model performance clearly.
+
+
+---
+
+📘 5. Recall
+
+Recall tells how many actual positives were correctly predicted.
+
+Formula:
+
+Recall = \frac{TP}{TP + FN}
+
+Meaning:
+
+👉 “Out of all real positive cases, how many did we catch?”
+
+Example:
+
+Disease detection → important to avoid missing sick people.
+
+
+---
+
+📘 6. Precision
+
+Precision tells how many predicted positives are actually correct.
+
+Formula:
+
+Precision = \frac{TP}{TP + FP}
+
+Meaning:
+
+👉 “Out of all predicted positives, how many are correct?”
+
+Example:
+
+Spam detection → avoid marking real emails as spam.
+
+
+---
+
+📘 7. Accuracy
+
+Accuracy measures overall correctness.
+
+Formula:
+
+Accuracy = \frac{TP + TN}{Total}
+
+Meaning:
+
+👉 “How many predictions are correct overall?”
+
+Key point:
+
+Works well only when dataset is balanced.
+
+
+---
+
+📘 8. Stemming
+
+Stemming reduces words to their root form (not always meaningful word).
+
+Example:
+
+playing → play
+
+studies → studi
+
+
+Method:
+
+Simply cuts suffixes.
+
+Key point:
+
+👉 Fast but not always accurate.
+
+
+---
+
+📘 9. Lemmatization
+
+Lemmatization also converts words to root form, but uses dictionary meaning.
+
+Example:
+
+playing → play
+
+better → good
+
+
+Key point:
+
+👉 More accurate than stemming.
+
+
+---
+
+📘 10. TF-IDF
+
+TF-IDF measures how important a word is in a document.
+
+Full form:
+
+TF → Term Frequency
+
+IDF → Inverse Document Frequency
+
+
+Formula idea:
+
+TF = word frequency in document
+
+IDF = importance across documents
+
+
+Meaning:
+
+👉 Common words get less weight
+👉 Rare important words get higher weight
+
+Example:
+
+“the” → low weight
+
+“machine learning” → high weight
+
+
+
+---
+
+📘 11. Data Wrangling
+
+Data wrangling means cleaning and preparing raw data for analysis.
+
+Steps:
+
+Handling missing values
+
+Removing duplicates
+
+Fixing data types
+
+Normalization
+
+Encoding categorical data
+
+
+Key point:
+
+👉 Raw data → clean structured data
+
+
+---
+
+📘 12. Data Preprocessing
+
+Data preprocessing is a broader step before ML models.
+
+Includes:
+
+Data cleaning
+
+Scaling (normalization)
+
+Encoding
+
+Feature selection
+
+Handling outliers
+
+
+Key point:
+
+👉 Makes data ready for machine learning.
+
+
+---
+
+📘 13. Data Analytics
+
+Data analytics is the process of examining data to find useful insights.
+
+Types:
+
+1. Descriptive → what happened
+
+
+2. Diagnostic → why it happened
+
+
+3. Predictive → what will happen
+
+
+4. Prescriptive → what should be done
+
+
+
+Example:
+
+Sales analysis
+
+Customer behavior
+
+
+Key point:
+
+👉 Converts raw data into decisions.
+
+
+---
+
+🎯 QUICK FINAL REVISION (VERY IMPORTANT)
+
+Linear → predict number
+
+Logistic → classification
+
+Outliers → extreme values
+
+Confusion matrix → performance table
+
+Precision → correctness of positive predictions
+
+Recall → how many positives captured
+
+Accuracy → overall correctness
+
+Stemming → rough root
+
+Lemmatization → correct root
+
+TF-IDF → word importance
+
+Wrangling → cleaning data
+
+Preprocessing → preparing data for ML
+
+Analytics → finding insights
+
+
+
+---
+
+If you want, I can also give you: 🔥 1-page ultra-short viva cheat sheet
+🔥 Most asked 25 viva questions with answers
+🔥 Rapid revision before exam (last-minute)

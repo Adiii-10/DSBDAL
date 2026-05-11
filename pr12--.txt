@@ -1,0 +1,410 @@
+Design a distributed application using MapReduce which processes a log file of a system. 
+
+
+
+// ============================================================
+// PRACTICAL: DISTRIBUTED LOG FILE PROCESSING
+// Tasks Covered:
+// 1. Read System Log File
+// 2. Count Log Levels
+// 3. Use Hadoop MapReduce
+// ============================================================
+
+import java.io.IOException;
+
+import org.apache.hadoop.conf.Configuration;
+
+import org.apache.hadoop.fs.Path;
+
+import org.apache.hadoop.io.IntWritable;
+
+import org.apache.hadoop.io.Text;
+
+import org.apache.hadoop.mapreduce.Job;
+
+import org.apache.hadoop.mapreduce.Mapper;
+
+import org.apache.hadoop.mapreduce.Reducer;
+
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class LogAnalysis {
+
+    // --------------------------------------------------------
+    // Mapper Class
+    // --------------------------------------------------------
+
+    public static class LogMapper
+        extends Mapper<Object, Text,
+                        Text, IntWritable> {
+
+        private final static IntWritable one =
+            new IntWritable(1);
+
+        private Text logType = new Text();
+
+        public void map(
+            Object key,
+            Text value,
+            Context context
+        ) throws IOException, InterruptedException {
+
+            String line = value.toString();
+
+            // Check log levels
+
+            if (line.contains("ERROR")) {
+
+                logType.set("ERROR");
+
+                context.write(logType, one);
+            }
+
+            else if (line.contains("WARNING")) {
+
+                logType.set("WARNING");
+
+                context.write(logType, one);
+            }
+
+            else if (line.contains("INFO")) {
+
+                logType.set("INFO");
+
+                context.write(logType, one);
+            }
+        }
+    }
+
+    // --------------------------------------------------------
+    // Reducer Class
+    // --------------------------------------------------------
+
+    public static class LogReducer
+        extends Reducer<Text, IntWritable,
+                         Text, IntWritable> {
+
+        public void reduce(
+            Text key,
+            Iterable<IntWritable> values,
+            Context context
+        ) throws IOException, InterruptedException {
+
+            int sum = 0;
+
+            // Count occurrences
+
+            for (IntWritable val : values) {
+
+                sum += val.get();
+            }
+
+            context.write(
+                key,
+                new IntWritable(sum)
+            );
+        }
+    }
+
+    // --------------------------------------------------------
+    // Main Method
+    // --------------------------------------------------------
+
+    public static void main(String[] args)
+        throws Exception {
+
+        Configuration conf = new Configuration();
+
+        Job job = Job.getInstance(
+            conf,
+            "log analysis"
+        );
+
+        job.setJarByClass(LogAnalysis.class);
+
+        // Set Mapper and Reducer
+
+        job.setMapperClass(LogMapper.class);
+
+        job.setReducerClass(LogReducer.class);
+
+        // Output types
+
+        job.setOutputKeyClass(Text.class);
+
+        job.setOutputValueClass(
+            IntWritable.class
+        );
+
+        // Set input and output paths
+
+        FileInputFormat.addInputPath(
+            job,
+            new Path(args[0])
+        );
+
+        FileOutputFormat.setOutputPath(
+            job,
+            new Path(args[1])
+        );
+
+        // Exit status
+
+        System.exit(
+            job.waitForCompletion(true)
+            ? 0 : 1
+        );
+    }
+}
+
+
+
+
+
+
+Here’s a **complete, high-scoring theory answer** for your *Distributed Log File Processing using MapReduce* in the **same structured format** 👇
+
+---
+
+# 📘 **Distributed Log File Processing using Hadoop MapReduce (Detailed Theory)**
+
+---
+
+## **Introduction**
+
+In large-scale systems, log files are generated continuously to record system events such as errors, warnings, and informational messages. These logs can become very large and difficult to analyze using traditional methods.
+
+A distributed approach using Hadoop MapReduce allows efficient processing of such large log files by dividing the task across multiple nodes.
+
+In this practical, a MapReduce application is designed to analyze system log files and count occurrences of different log levels such as **ERROR, WARNING, and INFO**.
+
+---
+
+## **Objective of the Application**
+
+* Process large log files in a distributed environment
+* Identify and count different log levels
+* Generate summarized output for analysis
+
+---
+
+## **Hadoop Framework Overview**
+
+The system uses:
+
+### 🔹 **HDFS (Hadoop Distributed File System)**
+
+* Stores log files in distributed manner
+* Ensures fault tolerance
+
+### 🔹 **MapReduce**
+
+* Processes data in parallel
+* Divides work into smaller tasks
+
+---
+
+## **Working of MapReduce for Log Analysis**
+
+---
+
+### 🔹 **1. Input Data**
+
+The input is a system log file containing entries such as:
+
+```text
+2024-01-01 ERROR Disk failure
+2024-01-01 INFO System started
+2024-01-01 WARNING Memory low
+```
+
+---
+
+### 🔹 **2. Map Phase**
+
+* Each line of the log file is processed
+* Mapper checks for keywords: ERROR, WARNING, INFO
+* Emits key-value pairs
+
+### **Example Output:**
+
+```text
+(ERROR, 1)
+(INFO, 1)
+(WARNING, 1)
+```
+
+✔ Purpose:
+
+* Convert raw log data into structured format
+
+---
+
+### 🔹 **3. Shuffle and Sort Phase**
+
+* Groups same keys together
+
+### **Example:**
+
+```text
+(ERROR, [1,1,1])
+(INFO, [1,1])
+(WARNING, [1])
+```
+
+✔ Purpose:
+
+* Organize data for reduction
+
+---
+
+### 🔹 **4. Reduce Phase**
+
+* Aggregates values for each key
+
+### **Final Output:**
+
+```text
+ERROR    3
+INFO     2
+WARNING  1
+```
+
+✔ Purpose:
+
+* Compute total occurrences
+
+---
+
+## **Components of the Program**
+
+---
+
+### ✅ **1. Mapper Class**
+
+* Reads each line of log file
+* Identifies log level
+* Emits (logType, 1)
+
+✔ Example:
+
+* "ERROR Disk failure" → (ERROR, 1)
+
+---
+
+### ✅ **2. Reducer Class**
+
+* Receives grouped values
+* Adds counts
+
+✔ Output:
+
+* (ERROR, total count)
+
+---
+
+### ✅ **3. Driver (Main Class)**
+
+* Configures the job
+* Sets Mapper and Reducer
+* Defines input/output paths
+
+---
+
+## **Distributed Processing Advantage**
+
+* Large log files are split into smaller blocks
+* Each block is processed in parallel
+* Results are combined efficiently
+
+---
+
+## **Local Standalone Mode**
+
+* Runs Hadoop on a single machine
+* Useful for testing
+* No cluster required
+
+---
+
+## **Applications of Log Analysis**
+
+* System monitoring
+* Error detection
+* Security analysis
+* Performance optimization
+
+---
+
+## **Advantages of Using MapReduce**
+
+* Scalable for large data
+* Fault tolerant
+* Parallel processing
+* Efficient for batch analysis
+
+---
+
+## **Limitations**
+
+* Not real-time (batch processing)
+* Setup complexity
+* Limited flexibility compared to newer frameworks
+
+---
+
+# 🔷 📊 **Inference / Observations (IMPORTANT)**
+
+---
+
+## 🔹 **1. ERROR logs**
+
+* Indicate system failures
+* High count → serious issues
+
+---
+
+## 🔹 **2. WARNING logs**
+
+* Indicate potential problems
+* Helps in preventive maintenance
+
+---
+
+## 🔹 **3. INFO logs**
+
+* Show normal system operations
+* Usually highest in number
+
+---
+
+## 🔹 **4. Key Insight**
+
+➡️ Log analysis helps in **early detection of system issues and performance monitoring**
+
+---
+
+## **Conclusion**
+
+In this practical, a distributed application using Hadoop MapReduce was designed to process system log files. The application efficiently categorized and counted log levels such as ERROR, WARNING, and INFO. This demonstrates how MapReduce can be used for large-scale log analysis and system monitoring.
+
+---
+
+# ✅ **Extra Points for Viva**
+
+✔ Mapper → extracts log type
+✔ Reducer → counts occurrences
+✔ Key = log level, Value = count
+✔ Works on large distributed datasets
+
+---
+
+# 🎯 **One-Line Exam Ending**
+
+➡️ *“This application demonstrates efficient large-scale log analysis using distributed computing with Hadoop MapReduce.”*
+
+---
+
+

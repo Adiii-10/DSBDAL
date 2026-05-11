@@ -1,0 +1,625 @@
+Data Analytics II 1. Implement logistic regression using Python/R to perform classification on Social_Network_Ads.csv dataset Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision, Recall on the given dataset. 
+
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+
+# -------------------------------
+# Load Dataset
+# -------------------------------
+df = pd.read_csv('Social_Network_Ads.csv')
+
+# -------------------------------
+# Data Preprocessing
+# -------------------------------
+# Remove unnecessary column
+df.drop(['User ID'], axis=1, inplace=True)
+
+# Select features (independent variables)
+X = df[['Age', 'EstimatedSalary']]
+
+# Target variable (dependent)
+y = df['Purchased']
+
+# -------------------------------
+# Feature Scaling
+# -------------------------------
+scaler = MinMaxScaler()
+X_scaled = scaler.fit_transform(X)
+
+# -------------------------------
+# Train-Test Split
+# -------------------------------
+X_train, X_test, y_train, y_test = train_test_split(
+    X_scaled, y, test_size=0.2, random_state=42)
+
+# -------------------------------
+# Model Creation and Training
+# -------------------------------
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# -------------------------------
+# Prediction
+# -------------------------------
+y_pred = model.predict(X_test)
+
+# -------------------------------
+# Confusion Matrix
+# -------------------------------
+cm = confusion_matrix(y_test, y_pred)
+TN, FP, FN, TP = cm.ravel()
+
+print("Confusion Matrix:\n", cm)
+print("TP:", TP)
+print("FP:", FP)
+print("TN:", TN)
+print("FN:", FN)
+
+# -------------------------------
+# Evaluation Metrics
+# -------------------------------
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+error_rate = 1 - accuracy
+
+print("Accuracy:", accuracy)
+print("Error Rate:", error_rate)
+print("Precision:", precision)
+print("Recall:", recall)
+
+
+
+
+
+🔷 Question-wise Explanation
+✅ 1. Load Dataset
+df = pd.read_csv('Social_Network_Ads.csv')
+
+✔ Loads dataset into DataFrame
+➡️ Contains user details like age, salary, and purchase decision
+
+✅ 2. Data Preprocessing
+df.drop(['User ID'], axis=1, inplace=True)
+
+✔ Removes unnecessary column
+
+✔ Why used:
+
+User ID has no impact on prediction
+✅ 3. Feature Selection
+X = df[['Age', 'EstimatedSalary']]
+y = df['Purchased']
+
+✔ X → input features
+✔ y → target variable (0 or 1)
+
+➡️ Classification problem
+
+✅ 4. Feature Scaling
+MinMaxScaler()
+
+✔ Scales values between 0 and 1
+
+✔ Why used:
+
+Logistic regression performs better with scaled data
+Prevents dominance of large values
+✅ 5. Train-Test Split
+train_test_split(...)
+
+✔ Splits data into training and testing
+
+✔ Why used:
+
+Evaluate model on unseen data
+✅ 6. Logistic Regression Model
+model = LogisticRegression()
+
+✔ Classification algorithm
+
+✔ Why used:
+
+Predicts probability of binary outcome
+✅ 7. Model Training
+model.fit(...)
+
+✔ Learns relationship between features and output
+
+✅ 8. Prediction
+y_pred = model.predict(X_test)
+
+✔ Predicts whether user will purchase or not
+
+✅ 9. Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+
+✔ Displays classification performance
+
+🔹 Values:
+TP (True Positive): Correct positive predictions
+FP (False Positive): Incorrect positive predictions
+TN (True Negative): Correct negative predictions
+FN (False Negative): Incorrect negative predictions
+✅ 10. Evaluation Metrics
+🔹 Accuracy:
+accuracy_score(...)
+
+✔ Overall correctness
+
+🔹 Error Rate:
+1 - accuracy
+
+✔ Incorrect predictions
+
+🔹 Precision:
+precision_score(...)
+
+✔ Accuracy of positive predictions
+
+🔹 Recall:
+recall_score(...)
+
+✔ Ability to detect actual positives
+
+
+
+
+
+📘 DETAILED THEORY (High-Scoring Answer)
+Introduction
+
+Logistic Regression is a supervised machine learning algorithm used for classification problems. It predicts the probability of a binary outcome (0 or 1). In this practical, logistic regression is applied on the Social Network Ads dataset to predict whether a user will purchase a product based on features like age and salary.
+
+Logistic Regression Concept
+
+Unlike linear regression, logistic regression uses a sigmoid function to map values between 0 and 1.
+
+P(y=1)=
+1+e
+−z
+1
+	​
+
+
+Where:
+
+z=w1x1+w2x2+b
+
+1. Data Preprocessing
+
+The dataset is cleaned by removing irrelevant columns such as User ID.
+Relevant features like Age and Estimated Salary are selected.
+
+Feature scaling is applied using MinMaxScaler to normalize data between 0 and 1, which improves model performance.
+
+2. Model Training
+
+The dataset is split into training and testing sets.
+The logistic regression model is trained using training data to learn patterns between input features and output.
+
+3. Prediction
+
+The trained model predicts whether a user will purchase a product based on input features.
+
+4. Confusion Matrix
+
+The confusion matrix is used to evaluate classification performance.
+
+	Predicted Positive	Predicted Negative
+Actual Positive	TP	FN
+Actual Negative	FP	TN
+5. Evaluation Metrics
+Accuracy
+Accuracy=
+TP+TN/TP+TN+FP+FN
+
+	​
+
+Error Rate
+Error Rate=1−Accuracy
+
+Precision
+Precision=
+TP/TP+FP
+
+	​
+
+Recall
+Recall=TP/TP+FN
+
+	​
+
+6. Importance of Metrics
+Accuracy → overall performance
+Precision → correctness of positive predictions
+Recall → ability to detect positives
+7. Advantages of Logistic Regression
+Simple and efficient
+Works well for binary classification
+Provides probability output
+8. Limitations
+Assumes linear decision boundary
+Sensitive to outliers
+Not suitable for complex relationships
+Conclusion
+
+In this practical, logistic regression was successfully implemented for classification. The model was evaluated using confusion matrix and performance metrics such as accuracy, precision, recall, and error rate. This demonstrates how classification models can be used to make predictions in real-world scenarios.
+
+
+
+
+
+
+1. Linear Regression
+
+Linear regression is a supervised machine learning algorithm used to predict a continuous numeric value.
+
+It finds a best-fit straight line between input (X) and output (Y).
+
+Equation:
+
+Y = mX + c
+
+Meaning:
+
+X → input (independent variable)
+
+Y → output (dependent variable)
+
+m → slope (change rate)
+
+c → intercept
+
+
+Example:
+
+Predict house price based on number of rooms.
+
+Key point:
+
+👉 It assumes a linear relationship between variables.
+
+
+---
+
+📘 2. Logistic Regression
+
+Logistic regression is used for classification problems (yes/no, 0/1).
+
+It uses the sigmoid function to convert output into probability.
+
+Output range:
+
+0 to 1
+
+Formula idea:
+
+P = \frac{1}{1 + e^{-x}}
+
+Example:
+
+Spam or not spam
+
+Purchased or not purchased
+
+
+Key point:
+
+👉 Despite the name “regression”, it is used for classification.
+
+
+---
+
+📘 3. Outliers
+
+Outliers are data points that are very different from other observations.
+
+Example:
+
+Most ages = 20–40, but one value = 120 → outlier
+
+Detection methods:
+
+IQR method
+
+Z-score method
+
+
+IQR rule:
+
+Below Q1 − 1.5×IQR → outlier
+
+Above Q3 + 1.5×IQR → outlier
+
+
+Key point:
+
+👉 Outliers can distort mean and ML models.
+
+
+---
+
+📘 4. Confusion Matrix
+
+A confusion matrix is used to evaluate classification models.
+
+It shows correct and incorrect predictions.
+
+Structure:
+
+	Predicted Yes	Predicted No
+
+Actual Yes	TP	FN
+Actual No	FP	TN
+
+
+Terms:
+
+TP → True Positive
+
+TN → True Negative
+
+FP → False Positive
+
+FN → False Negative
+
+
+Key point:
+
+👉 It helps measure model performance clearly.
+
+
+---
+
+📘 5. Recall
+
+Recall tells how many actual positives were correctly predicted.
+
+Formula:
+
+Recall = \frac{TP}{TP + FN}
+
+Meaning:
+
+👉 “Out of all real positive cases, how many did we catch?”
+
+Example:
+
+Disease detection → important to avoid missing sick people.
+
+
+---
+
+📘 6. Precision
+
+Precision tells how many predicted positives are actually correct.
+
+Formula:
+
+Precision = \frac{TP}{TP + FP}
+
+Meaning:
+
+👉 “Out of all predicted positives, how many are correct?”
+
+Example:
+
+Spam detection → avoid marking real emails as spam.
+
+
+---
+
+📘 7. Accuracy
+
+Accuracy measures overall correctness.
+
+Formula:
+
+Accuracy = \frac{TP + TN}{Total}
+
+Meaning:
+
+👉 “How many predictions are correct overall?”
+
+Key point:
+
+Works well only when dataset is balanced.
+
+
+---
+
+📘 8. Stemming
+
+Stemming reduces words to their root form (not always meaningful word).
+
+Example:
+
+playing → play
+
+studies → studi
+
+
+Method:
+
+Simply cuts suffixes.
+
+Key point:
+
+👉 Fast but not always accurate.
+
+
+---
+
+📘 9. Lemmatization
+
+Lemmatization also converts words to root form, but uses dictionary meaning.
+
+Example:
+
+playing → play
+
+better → good
+
+
+Key point:
+
+👉 More accurate than stemming.
+
+
+---
+
+📘 10. TF-IDF
+
+TF-IDF measures how important a word is in a document.
+
+Full form:
+
+TF → Term Frequency
+
+IDF → Inverse Document Frequency
+
+
+Formula idea:
+
+TF = word frequency in document
+
+IDF = importance across documents
+
+
+Meaning:
+
+👉 Common words get less weight
+👉 Rare important words get higher weight
+
+Example:
+
+“the” → low weight
+
+“machine learning” → high weight
+
+
+
+---
+
+📘 11. Data Wrangling
+
+Data wrangling means cleaning and preparing raw data for analysis.
+
+Steps:
+
+Handling missing values
+
+Removing duplicates
+
+Fixing data types
+
+Normalization
+
+Encoding categorical data
+
+
+Key point:
+
+👉 Raw data → clean structured data
+
+
+---
+
+📘 12. Data Preprocessing
+
+Data preprocessing is a broader step before ML models.
+
+Includes:
+
+Data cleaning
+
+Scaling (normalization)
+
+Encoding
+
+Feature selection
+
+Handling outliers
+
+
+Key point:
+
+👉 Makes data ready for machine learning.
+
+
+---
+
+📘 13. Data Analytics
+
+Data analytics is the process of examining data to find useful insights.
+
+Types:
+
+1. Descriptive → what happened
+
+
+2. Diagnostic → why it happened
+
+
+3. Predictive → what will happen
+
+
+4. Prescriptive → what should be done
+
+
+
+Example:
+
+Sales analysis
+
+Customer behavior
+
+
+Key point:
+
+👉 Converts raw data into decisions.
+
+
+---
+
+🎯 QUICK FINAL REVISION (VERY IMPORTANT)
+
+Linear → predict number
+
+Logistic → classification
+
+Outliers → extreme values
+
+Confusion matrix → performance table
+
+Precision → correctness of positive predictions
+
+Recall → how many positives captured
+
+Accuracy → overall correctness
+
+Stemming → rough root
+
+Lemmatization → correct root
+
+TF-IDF → word importance
+
+Wrangling → cleaning data
+
+Preprocessing → preparing data for ML
+
+Analytics → finding insights
+
+
+
+---
+
+If you want, I can also give you: 🔥 1-page ultra-short viva cheat sheet
+🔥 Most asked 25 viva questions with answers
+🔥 Rapid revision before exam (last-minute)

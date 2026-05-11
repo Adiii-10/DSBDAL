@@ -1,0 +1,612 @@
+Basic Statistics - Measures of Central Tendencies and Variance Perform the following operations on any open source dataset (eg. data.csv) 1. Provide summary statistics (mean, median, minimum, maximum, standard deviation) for a dataset (age, income etc.) with numeric variables grouped by one of the qualitative (categorical) variable. For example, if your categorical variable is age groups and quantitative variable is income, then provide summary statistics of income grouped by the age groups. Create a list that contains a numeric value for each response to the categorical variable. 2. Write a Python program to display some basic statistical details like percentile, mean, standard deviation etc. of the species of ‘Iris-setosa’, ‘Iris-versicolor’ and ‘Iris-versicolor’ of iris.csv dataset. Provide the codes with outputs and explain everything that you do in this step. 
+
+
+
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv('adult (3.1).csv')
+
+# -------------------------------
+# 1. Group by categorical variable (income)
+# -------------------------------
+
+# Calculate summary statistics for 'age'
+summary_stats = df.groupby('income')['age'].agg(['mean', 'median', 'min', 'max', 'std'])
+
+print("--- Summary Statistics of Age Grouped by Income ---")
+print(summary_stats)
+
+# -------------------------------
+# Create list of numeric values for each category
+# -------------------------------
+
+income_categories = summary_stats.index.tolist()
+mean_age_list = summary_stats['mean'].tolist()
+
+print("\nIncome Categories:", income_categories)
+print("Mean Age List:", mean_age_list)
+
+# Create mapping (category → numeric value)
+mapping = dict(zip(income_categories, mean_age_list))
+print("\nIncome vs Mean Age Mapping:", mapping)
+
+
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv('Iris Dataset Prac (1,3.2,6,10).csv')
+
+# -------------------------------
+# Group by Species
+# -------------------------------
+
+# Basic statistics
+stats = df.groupby('Species').agg(['mean', 'std', 'min', 'max'])
+
+print("--- Mean, Std, Min, Max for each Species ---")
+print(stats)
+
+# -------------------------------
+# Percentiles
+# -------------------------------
+
+percentiles = df.groupby('Species').quantile([0.25, 0.5, 0.75])
+
+print("\n--- Percentiles (25%, 50%, 75%) ---")
+print(percentiles)
+
+
+
+
+🔷 Question-wise Explanation
+✅ 3.1 Part – Grouped Summary Statistics
+🔹 Grouping:
+df.groupby('income')['age']
+
+✔ Groups data based on income (categorical variable)
+
+✔ Required because:
+➡️ Question asks to group numeric data by categorical variable
+
+🔹 Aggregation:
+.agg(['mean', 'median', 'min', 'max', 'std'])
+
+✔ Computes:
+
+Mean → average age
+Median → middle value
+Min → smallest age
+Max → largest age
+Std → spread of data
+
+✔ Why used:
+➡️ Gives complete statistical summary
+
+🔹 Convert to List:
+summary_stats.index.tolist()
+summary_stats['mean'].tolist()
+
+✔ Converts results into lists
+
+✔ Why used:
+➡️ Question asks to create list of numeric values
+
+🔹 Mapping:
+dict(zip(income_categories, mean_age_list))
+
+✔ Creates dictionary mapping:
+
+income → mean age
+
+✔ Why used:
+➡️ Easy interpretation of grouped data
+
+✅ 3.2 Part – Iris Dataset Statistics
+🔹 Grouping:
+df.groupby('Species')
+
+✔ Groups data based on species:
+
+Iris-setosa
+Iris-versicolor
+Iris-virginica
+🔹 Aggregation:
+.agg(['mean', 'std', 'min', 'max'])
+
+✔ Calculates key statistical measures
+
+✔ Why used:
+➡️ To compare characteristics of each species
+
+🔹 Percentiles:
+.quantile([0.25, 0.5, 0.75])
+
+✔ Calculates:
+
+25% → lower quartile
+50% → median
+75% → upper quartile
+
+✔ Why used:
+➡️ Shows data distribution
+
+
+
+
+
+📘 Basic Statistics – Measures of Central Tendency and Variance (Detailed Theory)
+Introduction
+
+Basic statistics plays a crucial role in data analysis by summarizing large datasets into meaningful insights. It helps in understanding the central value, spread, and distribution of data. In this practical, statistical measures are computed for numerical variables and analyzed with respect to categorical variables.
+
+1. Summary Statistics Grouped by a Categorical Variable
+
+In this step, the dataset is grouped using a categorical variable (such as income) and summary statistics are calculated for a numerical variable (such as age).
+
+Grouping Concept
+
+Grouping is performed using the groupby() function, which divides the dataset into subsets based on distinct categories. This allows analysis of numerical variables within each category separately.
+
+Measures of Central Tendency
+
+These measures represent the central or typical value of a dataset:
+
+Mean (Average):
+It is calculated as the sum of all values divided by the number of observations.
+It gives an overall idea of the dataset but is sensitive to outliers.
+Median:
+It is the middle value when data is arranged in order.
+It is less affected by extreme values and is useful for skewed data.
+Measures of Dispersion (Variability)
+
+These measures describe how spread out the data is:
+
+Minimum and Maximum:
+Represent the smallest and largest values in the dataset.
+Range:
+Difference between maximum and minimum values.
+Standard Deviation (σ):
+Measures how far data points deviate from the mean.
+A low standard deviation indicates data points are close to the mean, while a high value indicates greater spread.
+Importance of Grouped Statistics
+Helps compare different categories (e.g., income groups)
+Identifies patterns and trends
+Useful in decision-making and analysis
+List and Mapping Representation
+
+The computed statistical values (such as mean age) are stored in lists corresponding to each category. A mapping (dictionary) is created to associate each category with its numerical value.
+
+Purpose:
+
+Easy interpretation
+Useful for visualization and further analysis
+2. Statistical Analysis of Iris Dataset
+
+In this step, statistical measures are computed for each species in the Iris dataset. The dataset contains three categories:
+
+Iris-setosa
+Iris-versicolor
+Iris-virginica
+
+Each species is analyzed separately using grouping.
+
+Measures Calculated
+Mean
+Standard deviation
+Minimum
+Maximum
+
+These measures help in understanding the characteristics of each species based on features like sepal and petal dimensions.
+
+Importance of Group-wise Analysis
+Helps in comparing different categories
+Identifies distinguishing features
+Useful in classification problems
+3. Percentile Analysis
+
+Percentiles divide the dataset into 100 equal parts and help in understanding the distribution of data.
+
+Important Percentiles:
+25th Percentile (Q1): Lower quartile
+50th Percentile (Q2 / Median): Middle value
+75th Percentile (Q3): Upper quartile
+Significance of Percentiles
+Helps in identifying data spread
+Useful in detecting skewness
+Provides better understanding than mean alone
+Relation with Box Plot (Conceptual)
+
+Percentiles are used to construct boxplots:
+
+Q1, Median, Q3 define the box
+Helps visualize distribution and outliers
+4. Interpretation of Results
+If mean ≈ median → data is symmetric
+If mean > median → right-skewed data
+If mean < median → left-skewed data
+
+Standard deviation indicates consistency:
+
+Low → data is consistent
+High → data is widely spread
+5. Applications of Statistical Measures
+Data analysis and summarization
+Machine learning preprocessing
+Business decision-making
+Identifying trends and patterns
+Conclusion
+
+In this practical, statistical measures such as mean, median, minimum, maximum, standard deviation, and percentiles were calculated for numerical variables grouped by categorical variables. The Iris dataset was analyzed to compare different species. These techniques help in understanding data distribution, variability, and relationships between variables, making them essential for data analysis and predictive modeling.
+
+
+
+
+
+1. Linear Regression
+
+Linear regression is a supervised machine learning algorithm used to predict a continuous numeric value.
+
+It finds a best-fit straight line between input (X) and output (Y).
+
+Equation:
+
+Y = mX + c
+
+Meaning:
+
+X → input (independent variable)
+
+Y → output (dependent variable)
+
+m → slope (change rate)
+
+c → intercept
+
+
+Example:
+
+Predict house price based on number of rooms.
+
+Key point:
+
+👉 It assumes a linear relationship between variables.
+
+
+---
+
+📘 2. Logistic Regression
+
+Logistic regression is used for classification problems (yes/no, 0/1).
+
+It uses the sigmoid function to convert output into probability.
+
+Output range:
+
+0 to 1
+
+Formula idea:
+
+P = \frac{1}{1 + e^{-x}}
+
+Example:
+
+Spam or not spam
+
+Purchased or not purchased
+
+
+Key point:
+
+👉 Despite the name “regression”, it is used for classification.
+
+
+---
+
+📘 3. Outliers
+
+Outliers are data points that are very different from other observations.
+
+Example:
+
+Most ages = 20–40, but one value = 120 → outlier
+
+Detection methods:
+
+IQR method
+
+Z-score method
+
+
+IQR rule:
+
+Below Q1 − 1.5×IQR → outlier
+
+Above Q3 + 1.5×IQR → outlier
+
+
+Key point:
+
+👉 Outliers can distort mean and ML models.
+
+
+---
+
+📘 4. Confusion Matrix
+
+A confusion matrix is used to evaluate classification models.
+
+It shows correct and incorrect predictions.
+
+Structure:
+
+	Predicted Yes	Predicted No
+
+Actual Yes	TP	FN
+Actual No	FP	TN
+
+
+Terms:
+
+TP → True Positive
+
+TN → True Negative
+
+FP → False Positive
+
+FN → False Negative
+
+
+Key point:
+
+👉 It helps measure model performance clearly.
+
+
+---
+
+📘 5. Recall
+
+Recall tells how many actual positives were correctly predicted.
+
+Formula:
+
+Recall = \frac{TP}{TP + FN}
+
+Meaning:
+
+👉 “Out of all real positive cases, how many did we catch?”
+
+Example:
+
+Disease detection → important to avoid missing sick people.
+
+
+---
+
+📘 6. Precision
+
+Precision tells how many predicted positives are actually correct.
+
+Formula:
+
+Precision = \frac{TP}{TP + FP}
+
+Meaning:
+
+👉 “Out of all predicted positives, how many are correct?”
+
+Example:
+
+Spam detection → avoid marking real emails as spam.
+
+
+---
+
+📘 7. Accuracy
+
+Accuracy measures overall correctness.
+
+Formula:
+
+Accuracy = \frac{TP + TN}{Total}
+
+Meaning:
+
+👉 “How many predictions are correct overall?”
+
+Key point:
+
+Works well only when dataset is balanced.
+
+
+---
+
+📘 8. Stemming
+
+Stemming reduces words to their root form (not always meaningful word).
+
+Example:
+
+playing → play
+
+studies → studi
+
+
+Method:
+
+Simply cuts suffixes.
+
+Key point:
+
+👉 Fast but not always accurate.
+
+
+---
+
+📘 9. Lemmatization
+
+Lemmatization also converts words to root form, but uses dictionary meaning.
+
+Example:
+
+playing → play
+
+better → good
+
+
+Key point:
+
+👉 More accurate than stemming.
+
+
+---
+
+📘 10. TF-IDF
+
+TF-IDF measures how important a word is in a document.
+
+Full form:
+
+TF → Term Frequency
+
+IDF → Inverse Document Frequency
+
+
+Formula idea:
+
+TF = word frequency in document
+
+IDF = importance across documents
+
+
+Meaning:
+
+👉 Common words get less weight
+👉 Rare important words get higher weight
+
+Example:
+
+“the” → low weight
+
+“machine learning” → high weight
+
+
+
+---
+
+📘 11. Data Wrangling
+
+Data wrangling means cleaning and preparing raw data for analysis.
+
+Steps:
+
+Handling missing values
+
+Removing duplicates
+
+Fixing data types
+
+Normalization
+
+Encoding categorical data
+
+
+Key point:
+
+👉 Raw data → clean structured data
+
+
+---
+
+📘 12. Data Preprocessing
+
+Data preprocessing is a broader step before ML models.
+
+Includes:
+
+Data cleaning
+
+Scaling (normalization)
+
+Encoding
+
+Feature selection
+
+Handling outliers
+
+
+Key point:
+
+👉 Makes data ready for machine learning.
+
+
+---
+
+📘 13. Data Analytics
+
+Data analytics is the process of examining data to find useful insights.
+
+Types:
+
+1. Descriptive → what happened
+
+
+2. Diagnostic → why it happened
+
+
+3. Predictive → what will happen
+
+
+4. Prescriptive → what should be done
+
+
+
+Example:
+
+Sales analysis
+
+Customer behavior
+
+
+Key point:
+
+👉 Converts raw data into decisions.
+
+
+---
+
+🎯 QUICK FINAL REVISION (VERY IMPORTANT)
+
+Linear → predict number
+
+Logistic → classification
+
+Outliers → extreme values
+
+Confusion matrix → performance table
+
+Precision → correctness of positive predictions
+
+Recall → how many positives captured
+
+Accuracy → overall correctness
+
+Stemming → rough root
+
+Lemmatization → correct root
+
+TF-IDF → word importance
+
+Wrangling → cleaning data
+
+Preprocessing → preparing data for ML
+
+Analytics → finding insights
+
+
+
+---
+
+If you want, I can also give you: 🔥 1-page ultra-short viva cheat sheet
+🔥 Most asked 25 viva questions with answers
+🔥 Rapid revision before exam (last-minute)

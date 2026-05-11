@@ -1,0 +1,644 @@
+Data Wrangling II Perform the following operations using Python on any open source dataset (eg. data.csv) 1. Scan all variables for missing values and inconsistencies. If there are missing values and/or inconsistencies, use any of the suitable techniques to deal with them. 2. Scan all numeric variables for outliers. If there are outliers, use any of the suitable techniques to deal with them. 3. Apply data transformations on at least one of the variables. The purpose of this transformation should be one of the following reasons: to change the scale for better understanding of the variable, to convert a non-linear relation into a linear one, or to decrease the skewness and convert the distribution into a normal distribution. Reason and document your approach properly.
+
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# -------------------------------
+# Load Dataset
+# -------------------------------
+df = pd.read_csv("tecdiv.csv")
+
+# -------------------------------
+# 1. Check Missing Values
+# -------------------------------
+print("Missing Values:\n", df.isnull().sum())
+
+# Handle missing values using mean (for numeric columns)
+df.fillna(df.mean(numeric_only=True), inplace=True)
+
+# -------------------------------
+# 2. Detect and Handle Outliers
+# -------------------------------
+
+# Function to treat outliers using IQR method
+def remove_outliers(col):
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+
+    # Capping outliers
+    df[col] = np.where(df[col] < lower, lower,
+                       np.where(df[col] > upper, upper, df[col]))
+
+# Select numeric columns
+numeric_cols = df.select_dtypes(include=np.number).columns
+
+# Apply outlier treatment
+for col in numeric_cols:
+    remove_outliers(col)
+
+# Visualize using boxplot
+for col in numeric_cols:
+    sns.boxplot(y=df[col])
+    plt.title(f'Boxplot of {col}')
+    plt.show()
+
+# -------------------------------
+# 3. Data Transformation
+# -------------------------------
+
+# Apply log transformation to reduce skewness
+df['Transformed_Sem1'] = np.log1p(df[numeric_cols[0]])
+
+# Visualize transformed data
+sns.histplot(df['Transformed_Sem1'], kde=True)
+plt.title('Transformed Variable Distribution')
+plt.show()
+
+# -------------------------------
+# Final Dataset Info
+# -------------------------------
+print("\nFinal Dataset Info:")
+print(df.info())
+
+
+
+
+
+
+🔷 Question-wise Explanation
+✅ 1. Scan for Missing Values & Inconsistencies
+df.isnull().sum()
+
+✔ What it does:
+Checks number of missing values in each column
+
+✔ Why used:
+Missing data can affect analysis and model performance
+
+✔ Handling:
+
+df.fillna(df.mean(numeric_only=True), inplace=True)
+Replaces missing values with mean
+Suitable for numeric data
+
+➡️ Q1 requirement satisfied
+
+✅ 2. Detect and Handle Outliers
+🔹 Outlier Detection using IQR:
+Q1 = df[col].quantile(0.25)
+Q3 = df[col].quantile(0.75)
+IQR = Q3 - Q1
+
+✔ What it does:
+Finds spread of middle 50% data
+
+🔹 Define Limits:
+lower = Q1 - 1.5 * IQR
+upper = Q3 + 1.5 * IQR
+
+✔ Why used:
+Values outside this range are considered outliers
+
+🔹 Handle Outliers:
+df[col] = np.where(...)
+
+✔ What it does:
+Caps extreme values within range
+
+✔ Why used:
+Prevents distortion of data
+
+🔹 Visualization:
+sns.boxplot(y=df[col])
+
+✔ What it does:
+Displays outliers visually
+
+➡️ Q2 requirement satisfied
+
+✅ 3. Data Transformation
+🔹 Log Transformation:
+df['Transformed_Sem1'] = np.log1p(df[numeric_cols[0]])
+
+✔ What it does:
+Applies log transformation
+
+✔ Why used:
+
+Reduces skewness
+Makes data more normal
+
+✔ Why log1p:
+Handles zero values safely
+
+🔹 Visualization:
+sns.histplot(..., kde=True)
+
+✔ Shows distribution after transformation
+
+➡️ Q3 requirement satisfied
+
+✅ 4. Final Dataset Check
+df.info()
+
+✔ Displays:
+
+Data types
+Non-null values
+
+✔ Confirms preprocessing
+
+
+
+
+
+
+📘 Data Wrangling II – Detailed Theory Explanation
+Introduction
+
+Data wrangling is the process of cleaning, transforming, and organizing raw data into a suitable format for analysis. In this practical, an open-source dataset is used to perform data preprocessing operations such as handling missing values, detecting and treating outliers, and applying data transformations.
+
+1. Handling Missing Values and Inconsistencies
+
+The first step in data wrangling is to identify missing values in the dataset.
+This is done using the isnull().sum() function, which returns the number of missing values in each column.
+
+Missing values can arise due to:
+
+Data entry errors
+Incomplete data collection
+System or sensor failures
+
+If not handled properly, missing values can lead to incorrect analysis and biased results.
+
+Technique Used: Mean Imputation
+
+In this practical, missing values in numerical columns are replaced with the mean of the respective column using the fillna() function.
+
+Reason for using mean:
+
+Maintains overall distribution of data
+Simple and effective for numerical variables
+Does not reduce dataset size (unlike row deletion)
+
+This step ensures that the dataset becomes complete and consistent for further analysis.
+
+2. Outlier Detection and Treatment
+
+Outliers are extreme values that differ significantly from other observations.
+They may occur due to:
+
+Measurement errors
+Data entry mistakes
+Genuine rare events
+
+Outliers can distort statistical analysis, affect mean values, and reduce model accuracy.
+
+Detection Method: Interquartile Range (IQR)
+
+The IQR method is used to detect outliers:
+
+Q1 (25th percentile)
+Q3 (75th percentile)
+IQR = Q3 − Q1
+
+Outliers are defined as values outside the range:
+
+Q1−1.5×IQRandQ3+1.5×IQR
+Treatment Method: Capping (Winsorization)
+
+Instead of removing outliers, capping is used:
+
+Values below lower limit → replaced with lower bound
+Values above upper limit → replaced with upper bound
+
+Reason for using capping:
+
+Prevents loss of data
+Reduces effect of extreme values
+Maintains dataset size
+Visualization
+
+Boxplots are used to visualize outliers before and after treatment.
+They clearly show the spread of data and highlight extreme values.
+
+3. Data Transformation
+
+Data transformation is applied to modify the structure or scale of data to improve analysis.
+
+In this practical, log transformation is applied using log1p().
+
+Why Transformation is Needed:
+To reduce skewness in data
+To make distribution more normal
+To stabilize variance
+To improve performance of machine learning models
+Why Log Transformation:
+Compresses large values
+Expands small values
+Reduces right-skewed distributions
+Use of log1p() Function:
+
+The log1p() function computes:
+
+log(1+x)
+
+Advantages:
+
+Handles zero values safely
+Avoids undefined log(0)
+Visualization
+
+Histogram with KDE (Kernel Density Estimation) is used to visualize the transformed data distribution.
+This helps in comparing before and after transformation.
+
+4. Final Dataset Validation
+
+After all preprocessing steps:
+
+info() is used to check data types and non-null values
+Ensures that:
+No missing values remain
+Data is consistent
+Data is ready for analysis or modeling
+Conclusion
+
+In this practical, the dataset was successfully cleaned and transformed. Missing values were handled using mean imputation, outliers were detected and treated using the IQR method with capping, and log transformation was applied to reduce skewness. These preprocessing steps improve data quality, ensure consistency, and make the dataset suitable for further statistical analysis and machine learning tasks.
+
+
+
+
+1. Linear Regression
+
+Linear regression is a supervised machine learning algorithm used to predict a continuous numeric value.
+
+It finds a best-fit straight line between input (X) and output (Y).
+
+Equation:
+
+Y = mX + c
+
+Meaning:
+
+X → input (independent variable)
+
+Y → output (dependent variable)
+
+m → slope (change rate)
+
+c → intercept
+
+
+Example:
+
+Predict house price based on number of rooms.
+
+Key point:
+
+👉 It assumes a linear relationship between variables.
+
+
+---
+
+📘 2. Logistic Regression
+
+Logistic regression is used for classification problems (yes/no, 0/1).
+
+It uses the sigmoid function to convert output into probability.
+
+Output range:
+
+0 to 1
+
+Formula idea:
+
+P = \frac{1}{1 + e^{-x}}
+
+Example:
+
+Spam or not spam
+
+Purchased or not purchased
+
+
+Key point:
+
+👉 Despite the name “regression”, it is used for classification.
+
+
+---
+
+📘 3. Outliers
+
+Outliers are data points that are very different from other observations.
+
+Example:
+
+Most ages = 20–40, but one value = 120 → outlier
+
+Detection methods:
+
+IQR method
+
+Z-score method
+
+
+IQR rule:
+
+Below Q1 − 1.5×IQR → outlier
+
+Above Q3 + 1.5×IQR → outlier
+
+
+Key point:
+
+👉 Outliers can distort mean and ML models.
+
+
+---
+
+📘 4. Confusion Matrix
+
+A confusion matrix is used to evaluate classification models.
+
+It shows correct and incorrect predictions.
+
+Structure:
+
+	Predicted Yes	Predicted No
+
+Actual Yes	TP	FN
+Actual No	FP	TN
+
+
+Terms:
+
+TP → True Positive
+
+TN → True Negative
+
+FP → False Positive
+
+FN → False Negative
+
+
+Key point:
+
+👉 It helps measure model performance clearly.
+
+
+---
+
+📘 5. Recall
+
+Recall tells how many actual positives were correctly predicted.
+
+Formula:
+
+Recall = \frac{TP}{TP + FN}
+
+Meaning:
+
+👉 “Out of all real positive cases, how many did we catch?”
+
+Example:
+
+Disease detection → important to avoid missing sick people.
+
+
+---
+
+📘 6. Precision
+
+Precision tells how many predicted positives are actually correct.
+
+Formula:
+
+Precision = \frac{TP}{TP + FP}
+
+Meaning:
+
+👉 “Out of all predicted positives, how many are correct?”
+
+Example:
+
+Spam detection → avoid marking real emails as spam.
+
+
+---
+
+📘 7. Accuracy
+
+Accuracy measures overall correctness.
+
+Formula:
+
+Accuracy = \frac{TP + TN}{Total}
+
+Meaning:
+
+👉 “How many predictions are correct overall?”
+
+Key point:
+
+Works well only when dataset is balanced.
+
+
+---
+
+📘 8. Stemming
+
+Stemming reduces words to their root form (not always meaningful word).
+
+Example:
+
+playing → play
+
+studies → studi
+
+
+Method:
+
+Simply cuts suffixes.
+
+Key point:
+
+👉 Fast but not always accurate.
+
+
+---
+
+📘 9. Lemmatization
+
+Lemmatization also converts words to root form, but uses dictionary meaning.
+
+Example:
+
+playing → play
+
+better → good
+
+
+Key point:
+
+👉 More accurate than stemming.
+
+
+---
+
+📘 10. TF-IDF
+
+TF-IDF measures how important a word is in a document.
+
+Full form:
+
+TF → Term Frequency
+
+IDF → Inverse Document Frequency
+
+
+Formula idea:
+
+TF = word frequency in document
+
+IDF = importance across documents
+
+
+Meaning:
+
+👉 Common words get less weight
+👉 Rare important words get higher weight
+
+Example:
+
+“the” → low weight
+
+“machine learning” → high weight
+
+
+
+---
+
+📘 11. Data Wrangling
+
+Data wrangling means cleaning and preparing raw data for analysis.
+
+Steps:
+
+Handling missing values
+
+Removing duplicates
+
+Fixing data types
+
+Normalization
+
+Encoding categorical data
+
+
+Key point:
+
+👉 Raw data → clean structured data
+
+
+---
+
+📘 12. Data Preprocessing
+
+Data preprocessing is a broader step before ML models.
+
+Includes:
+
+Data cleaning
+
+Scaling (normalization)
+
+Encoding
+
+Feature selection
+
+Handling outliers
+
+
+Key point:
+
+👉 Makes data ready for machine learning.
+
+
+---
+
+📘 13. Data Analytics
+
+Data analytics is the process of examining data to find useful insights.
+
+Types:
+
+1. Descriptive → what happened
+
+
+2. Diagnostic → why it happened
+
+
+3. Predictive → what will happen
+
+
+4. Prescriptive → what should be done
+
+
+
+Example:
+
+Sales analysis
+
+Customer behavior
+
+
+Key point:
+
+👉 Converts raw data into decisions.
+
+
+---
+
+🎯 QUICK FINAL REVISION (VERY IMPORTANT)
+
+Linear → predict number
+
+Logistic → classification
+
+Outliers → extreme values
+
+Confusion matrix → performance table
+
+Precision → correctness of positive predictions
+
+Recall → how many positives captured
+
+Accuracy → overall correctness
+
+Stemming → rough root
+
+Lemmatization → correct root
+
+TF-IDF → word importance
+
+Wrangling → cleaning data
+
+Preprocessing → preparing data for ML
+
+Analytics → finding insights
+
+
+
+---
+
+If you want, I can also give you: 🔥 1-page ultra-short viva cheat sheet
+🔥 Most asked 25 viva questions with answers
+🔥 Rapid revision before exam (last-minute)

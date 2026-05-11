@@ -1,0 +1,361 @@
+Write a code in JAVA for a simple WordCount application that counts the number of occurrences of each word in a given input set using the Hadoop MapReduce framework on local-standalone set-up 
+
+
+// ============================================================
+// PRACTICAL: HADOOP MAPREDUCE WORDCOUNT
+// Tasks Covered:
+// 1. Create Mapper Class
+// 2. Create Reducer Class
+// 3. Configure Hadoop Job
+// 4. Count Occurrence of Words
+// ============================================================
+
+import java.io.IOException;
+
+import org.apache.hadoop.conf.Configuration;
+
+import org.apache.hadoop.fs.Path;
+
+import org.apache.hadoop.io.IntWritable;
+
+import org.apache.hadoop.io.Text;
+
+import org.apache.hadoop.mapreduce.Job;
+
+import org.apache.hadoop.mapreduce.Mapper;
+
+import org.apache.hadoop.mapreduce.Reducer;
+
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class WordCount {
+
+    // --------------------------------------------------------
+    // Mapper Class
+    // --------------------------------------------------------
+
+    public static class TokenizerMapper
+        extends Mapper<Object, Text, Text, IntWritable> {
+
+        private final static IntWritable one =
+            new IntWritable(1);
+
+        private Text word = new Text();
+
+        public void map(
+            Object key,
+            Text value,
+            Context context
+        ) throws IOException, InterruptedException {
+
+            // Convert line into words
+
+            String[] words =
+                value.toString().split(" ");
+
+            // Emit each word with value 1
+
+            for (String w : words) {
+
+                word.set(w);
+
+                context.write(word, one);
+            }
+        }
+    }
+
+    // --------------------------------------------------------
+    // Reducer Class
+    // --------------------------------------------------------
+
+    public static class IntSumReducer
+        extends Reducer<Text, IntWritable,
+                         Text, IntWritable> {
+
+        public void reduce(
+            Text key,
+            Iterable<IntWritable> values,
+            Context context
+        ) throws IOException, InterruptedException {
+
+            int sum = 0;
+
+            // Add all counts
+
+            for (IntWritable val : values) {
+
+                sum += val.get();
+            }
+
+            // Output word and total count
+
+            context.write(
+                key,
+                new IntWritable(sum)
+            );
+        }
+    }
+
+    // --------------------------------------------------------
+    // Main Method
+    // --------------------------------------------------------
+
+    public static void main(String[] args)
+        throws Exception {
+
+        Configuration conf = new Configuration();
+
+        Job job = Job.getInstance(
+            conf,
+            "word count"
+        );
+
+        job.setJarByClass(WordCount.class);
+
+        // Set Mapper and Reducer
+
+        job.setMapperClass(
+            TokenizerMapper.class
+        );
+
+        job.setReducerClass(
+            IntSumReducer.class
+        );
+
+        // Output types
+
+        job.setOutputKeyClass(Text.class);
+
+        job.setOutputValueClass(
+            IntWritable.class
+        );
+
+        // Input and Output paths
+
+        FileInputFormat.addInputPath(
+            job,
+            new Path(args[0])
+        );
+
+        FileOutputFormat.setOutputPath(
+            job,
+            new Path(args[1])
+        );
+
+        // Exit status
+
+        System.exit(
+            job.waitForCompletion(true)
+            ? 0 : 1
+        );
+    }
+}
+
+
+
+
+Here’s a **detailed, exam-ready theory** for your Hadoop MapReduce WordCount practical in the **same structured format** 👇
+
+---
+
+# 📘 **Hadoop MapReduce – WordCount Application (Detailed Theory)**
+
+---
+
+## **Introduction**
+
+Hadoop MapReduce is a programming model used for processing large datasets in a distributed computing environment. It allows data to be processed in parallel across multiple nodes, making it highly efficient for big data applications.
+
+The **WordCount application** is one of the simplest and most commonly used examples in Hadoop. It counts the number of occurrences of each word in a given input dataset.
+
+---
+
+## **Hadoop Framework Overview**
+
+Hadoop consists of two main components:
+
+### **1. HDFS (Hadoop Distributed File System)**
+
+* Stores large datasets across multiple machines
+* Provides fault tolerance and scalability
+
+### **2. MapReduce**
+
+* Processes data in parallel
+* Divides tasks into smaller subtasks
+
+---
+
+## **MapReduce Programming Model**
+
+MapReduce works in two main phases:
+
+---
+
+### 🔹 **1. Map Phase**
+
+* Input data is split into smaller chunks
+* Each chunk is processed by a mapper
+* Mapper converts input into **key-value pairs**
+
+### **In WordCount:**
+
+* Input: Line of text
+* Output: (word, 1)
+
+Example:
+
+```
+Input: "Hello World Hello"
+
+Mapper Output:
+(Hello, 1)
+(World, 1)
+(Hello, 1)
+```
+
+---
+
+### 🔹 **2. Shuffle and Sort Phase**
+
+* Intermediate key-value pairs are grouped by key
+* All values of the same key are sent to the reducer
+
+Example:
+
+```
+(Hello, [1,1])
+(World, [1])
+```
+
+---
+
+### 🔹 **3. Reduce Phase**
+
+* Reducer processes grouped data
+* Performs aggregation (sum in this case)
+
+Example:
+
+```
+(Hello, 2)
+(World, 1)
+```
+
+---
+
+## **Components of WordCount Program**
+
+---
+
+### ✅ **1. Mapper Class**
+
+* Reads input data
+* Splits text into words
+* Emits (word, 1)
+
+✔ Purpose:
+
+* Converts raw data into structured key-value pairs
+
+---
+
+### ✅ **2. Reducer Class**
+
+* Receives grouped values for each word
+* Adds counts
+
+✔ Purpose:
+
+* Aggregates results
+
+---
+
+### ✅ **3. Driver (Main Class)**
+
+* Configures and runs the job
+
+✔ Responsibilities:
+
+* Set Mapper and Reducer
+* Define input/output formats
+* Submit job to Hadoop
+
+---
+
+## **Working of WordCount**
+
+1. Input file is stored in HDFS
+2. Hadoop splits input into blocks
+3. Mapper processes each block
+4. Intermediate key-value pairs generated
+5. Shuffle groups same keys
+6. Reducer calculates total count
+7. Output stored in HDFS
+
+---
+
+## **Local Standalone Setup**
+
+In standalone mode:
+
+* Hadoop runs on a single machine
+* Used for testing and learning
+* No distributed environment required
+
+---
+
+## **Advantages of MapReduce**
+
+* Scalable for large datasets
+* Fault tolerant
+* Parallel processing
+* Efficient for batch processing
+
+---
+
+## **Limitations**
+
+* Not suitable for real-time processing
+* Complex setup
+* High latency
+
+---
+
+## **Applications of WordCount**
+
+* Text analysis
+* Log analysis
+* Search engines
+* Natural Language Processing
+
+---
+
+## **Conclusion**
+
+In this practical, a WordCount application was implemented using Hadoop MapReduce. The program counts the frequency of words by dividing the task into Map and Reduce phases. This demonstrates the power of distributed processing in handling large-scale data efficiently.
+
+---
+
+# ✅ **Extra Points for Viva (Very Important)**
+
+✔ Mapper → produces key-value pairs
+✔ Reducer → aggregates results
+✔ Shuffle → grouping mechanism
+✔ Key = word, Value = count
+✔ Output stored in HDFS
+
+---
+
+# 🎯 **One-Line Summary (Exam Ending Line)**
+
+➡️ *“WordCount is a classic example that demonstrates how Hadoop MapReduce processes large data efficiently using parallel computation.”*
+
+---
+
+
+
+
+

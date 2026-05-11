@@ -1,0 +1,619 @@
+Data Wrangling I Perform the following operations using Python on any open source dataset (eg. data.csv) 1. Import all the required Python Libraries. 2. Locate an open source data from the web (eg. https://www.kaggle.com). Provide a clear description of the data and its source (i.e. URL of the web site). 3. Load the Dataset into pandas dataframe. 4. Data Preprocessing: check for missing values in the data using pandas isnull(), describe() function to get some initial statistics. Provide variable descriptions. Types of variables etc. Check the dimensions of the data frame. 5. Data Formatting and Data Normalization: Summarize the types of variables by checking the data types (i.e., character, numeric, integer, factor, and logical) of the variables in the data set. If variables are not in the correct data type, apply proper type conversions. 6. Turn categorical variables into quantitative variables in Python In addition to the codes and outputs, explain every operation that you do in the above steps and explain everything that you do to import/read/scrape the data set 
+
+
+import pandas as pd      # Used for data handling and DataFrame operations
+import numpy as np       # Used for numerical operations
+
+# -------------------------------
+# 3. Load Dataset into DataFrame
+# -------------------------------
+df = pd.read_csv('Iris Dataset Prac (1,3.2,6,10).csv')
+
+# -------------------------------
+# 4. Data Preprocessing
+# -------------------------------
+
+# Check dimensions (rows, columns)
+print("1. Dimensions of Data:", df.shape)
+
+# Check missing values in each column
+print("\n2. Missing Values:\n", df.isnull().sum())
+
+# Get statistical summary (mean, std, min, max, etc.)
+print("\n3. Statistical Summary:\n", df.describe())
+
+# Check data types of each column
+print("\n4. Variable Types:\n", df.dtypes)
+
+
+# -------------------------------
+# 5. Data Formatting
+# -------------------------------
+
+# Convert 'Id' column to integer (ensures correct datatype)
+df['Id'] = df['Id'].astype(int)
+
+
+# -------------------------------
+# 5. Data Normalization
+# -------------------------------
+
+# Select numeric columns for normalization
+numeric_cols = ['SepalLengthCm', 'SepalWidthCm', 
+                'PetalLengthCm', 'PetalWidthCm']
+
+# Apply Min-Max Normalization (scaling values between 0 and 1)
+for col in numeric_cols:
+    df[col] = (df[col] - df[col].min()) / (df[col].max() - df[col].min())
+
+print("\n5. Data after Normalization:\n", df.head())
+
+
+# -------------------------------
+# 6. Convert Categorical to Numeric
+# -------------------------------
+
+# One-Hot Encoding for 'Species' column
+df_encoded = pd.get_dummies(df, columns=['Species'])
+
+print("\n6. Encoded Data:\n", df_encoded.head())
+
+
+
+🔷 Question-wise Explanation of Your Code
+✅ 1. Import Required Libraries
+import pandas as pd
+import numpy as np
+✔ What it does:
+pandas → used for handling datasets (DataFrame operations)
+numpy → used for numerical operations
+✔ Why used:
+Required to load, manipulate, and analyze data
+✔ Question mapping:
+
+➡️ Q1: Import all required Python libraries
+
+✅ 2. Load Dataset
+df = pd.read_csv('Iris Dataset Prac (1,3.2,6,10).csv')
+✔ What it does:
+Reads CSV file and converts it into a DataFrame
+✔ Why used:
+Pandas DataFrame makes data easy to analyze and manipulate
+✔ Question mapping:
+
+➡️ Q3: Load dataset into pandas dataframe
+
+⚠️ ❗ Missing in your code (IMPORTANT for exam)
+
+You must mention dataset source like:
+
+Example: Kaggle
+URL: https://www.kaggle.com/datasets/uciml/iris
+✔ Add this in theory:
+Dataset: Iris dataset
+Contains flower measurements (sepal & petal length/width)
+Used for classification
+
+➡️ Q2 requirement
+
+✅ 3. Check Dimensions
+print("1. Dimensions of Data:", df.shape)
+✔ What it does:
+Returns (rows, columns)
+✔ Why used:
+To understand dataset size
+✔ Question mapping:
+
+➡️ Q4: Check dimensions of dataframe
+
+✅ 4. Check Missing Values
+print("\n2. Missing Values:\n", df.isnull().sum())
+✔ What it does:
+Checks how many missing values exist in each column
+✔ Why used:
+Missing data affects analysis → must be handled
+✔ Question mapping:
+
+➡️ Q4: Data preprocessing (missing values)
+
+✅ 5. Statistical Summary
+print("\n3. Statistical Summary:\n", df.describe())
+✔ What it does:
+Gives:
+Mean
+Std deviation
+Min, Max
+Quartiles
+✔ Why used:
+Helps understand data distribution
+✔ Question mapping:
+
+➡️ Q4: describe() for initial statistics
+
+✅ 6. Data Types
+print("\n4. Variable Types:\n", df.dtypes)
+✔ What it does:
+Shows data type of each column (int, float, object)
+✔ Why used:
+Needed before transformations
+✔ Question mapping:
+
+➡️ Q5: Check types of variables
+
+✅ 7. Data Type Conversion
+df['Id'] = df['Id'].astype(int)
+✔ What it does:
+Converts Id column to integer
+✔ Why used:
+Ensures correct datatype (important for processing)
+✔ Question mapping:
+
+➡️ Q5: Apply proper type conversions
+
+✅ 8. Data Normalization
+numeric_cols = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
+
+for col in numeric_cols:
+    df[col] = (df[col] - df[col].min()) / (df[col].max() - df[col].min())
+✔ What it does:
+Applies Min-Max Normalization
+Converts values into range [0,1]
+✔ Formula:
+(x−min)/(max−min)
+✔ Why used:
+Removes scale differences
+Helps in machine learning
+✔ Question mapping:
+
+➡️ Q5: Data normalization
+
+✅ 9. View Normalized Data
+print("\n5. Data after Normalization:\n", df.head())
+✔ What it does:
+Displays first 5 rows after normalization
+✔ Why used:
+To verify transformation
+✅ 10. Convert Categorical → Numerical
+df_encoded = pd.get_dummies(df, columns=['Species'])
+✔ What it does:
+Converts Species (categorical) into numeric columns:
+Species_setosa
+Species_versicolor
+Species_virginica
+✔ Why used:
+ML models require numeric data
+✔ Question mapping:
+
+➡️ Q6: Convert categorical to quantitative
+
+✅ 11. View Encoded Data
+print("\n6. Encoded Data:\n", df_encoded.head())
+✔ What it does:
+Displays encoded dataset
+
+
+
+
+
+📘 Data Wrangling I – Theory Explanation
+1. Importing Required Libraries
+
+The first step is to import necessary Python libraries such as Pandas and NumPy.
+Pandas is used for data manipulation and analysis, while NumPy is used for numerical computations.
+
+2. Dataset Description and Source
+
+The dataset used is the Iris Dataset, which is a well-known dataset in data science. It contains measurements of iris flowers such as:
+
+Sepal Length
+Sepal Width
+Petal Length
+Petal Width
+Species (target variable)
+
+The dataset is commonly available on Kaggle
+URL: https://www.kaggle.com/datasets/uciml/iris
+
+This dataset is used for classification tasks.
+
+3. Loading the Dataset
+The dataset is loaded into a Pandas DataFrame using the read_csv() function.
+This allows easy handling and manipulation of structured data.
+
+4. Data Preprocessing
+Data preprocessing is an important step to clean and understand the dataset.
+
+Checking Dimensions:
+The shape function is used to determine the number of rows and columns.
+Missing Values:
+The isnull().sum() function is used to identify missing values in each column.
+Statistical Summary:
+The describe() function provides summary statistics such as mean, median, standard deviation, minimum, and maximum values.
+Variable Types:
+The dtypes function is used to identify the data types of each column (integer, float, object, etc.).
+
+5. Data Formatting and Normalization
+Data Type Conversion:
+Some columns may not be in the correct format. The astype() function is used to convert them into appropriate data types (e.g., converting ID to integer).
+Normalization:
+Min-Max normalization is applied to numerical variables to scale values between 0 and 1.
+This helps in improving model performance and makes variables comparable.
+
+6. Converting Categorical Variables to Numerical
+Machine learning models require numerical input.
+The categorical variable Species is converted into numerical form using one-hot encoding with get_dummies().
+
+This creates new binary columns representing each category.
+
+Conclusion
+
+In this practical, the dataset was successfully loaded, cleaned, and preprocessed. Missing values and data types were checked, normalization was applied to numerical features, and categorical variables were converted into numerical form. These steps ensure that the dataset is ready for further analysis or machine learning tasks.
+
+
+1. Linear Regression
+
+Linear regression is a supervised machine learning algorithm used to predict a continuous numeric value.
+
+It finds a best-fit straight line between input (X) and output (Y).
+
+Equation:
+
+Y = mX + c
+
+Meaning:
+
+X → input (independent variable)
+
+Y → output (dependent variable)
+
+m → slope (change rate)
+
+c → intercept
+
+
+Example:
+
+Predict house price based on number of rooms.
+
+Key point:
+
+👉 It assumes a linear relationship between variables.
+
+
+---
+
+📘 2. Logistic Regression
+
+Logistic regression is used for classification problems (yes/no, 0/1).
+
+It uses the sigmoid function to convert output into probability.
+
+Output range:
+
+0 to 1
+
+Formula idea:
+
+P = \frac{1}{1 + e^{-x}}
+
+Example:
+
+Spam or not spam
+
+Purchased or not purchased
+
+
+Key point:
+
+👉 Despite the name “regression”, it is used for classification.
+
+
+---
+
+📘 3. Outliers
+
+Outliers are data points that are very different from other observations.
+
+Example:
+
+Most ages = 20–40, but one value = 120 → outlier
+
+Detection methods:
+
+IQR method
+
+Z-score method
+
+
+IQR rule:
+
+Below Q1 − 1.5×IQR → outlier
+
+Above Q3 + 1.5×IQR → outlier
+
+
+Key point:
+
+👉 Outliers can distort mean and ML models.
+
+
+---
+
+📘 4. Confusion Matrix
+
+A confusion matrix is used to evaluate classification models.
+
+It shows correct and incorrect predictions.
+
+Structure:
+
+	Predicted Yes	Predicted No
+
+Actual Yes	TP	FN
+Actual No	FP	TN
+
+
+Terms:
+
+TP → True Positive
+
+TN → True Negative
+
+FP → False Positive
+
+FN → False Negative
+
+
+Key point:
+
+👉 It helps measure model performance clearly.
+
+
+---
+
+📘 5. Recall
+
+Recall tells how many actual positives were correctly predicted.
+
+Formula:
+
+Recall = \frac{TP}{TP + FN}
+
+Meaning:
+
+👉 “Out of all real positive cases, how many did we catch?”
+
+Example:
+
+Disease detection → important to avoid missing sick people.
+
+
+---
+
+📘 6. Precision
+
+Precision tells how many predicted positives are actually correct.
+
+Formula:
+
+Precision = \frac{TP}{TP + FP}
+
+Meaning:
+
+👉 “Out of all predicted positives, how many are correct?”
+
+Example:
+
+Spam detection → avoid marking real emails as spam.
+
+
+---
+
+📘 7. Accuracy
+
+Accuracy measures overall correctness.
+
+Formula:
+
+Accuracy = \frac{TP + TN}{Total}
+
+Meaning:
+
+👉 “How many predictions are correct overall?”
+
+Key point:
+
+Works well only when dataset is balanced.
+
+
+---
+
+📘 8. Stemming
+
+Stemming reduces words to their root form (not always meaningful word).
+
+Example:
+
+playing → play
+
+studies → studi
+
+
+Method:
+
+Simply cuts suffixes.
+
+Key point:
+
+👉 Fast but not always accurate.
+
+
+---
+
+📘 9. Lemmatization
+
+Lemmatization also converts words to root form, but uses dictionary meaning.
+
+Example:
+
+playing → play
+
+better → good
+
+
+Key point:
+
+👉 More accurate than stemming.
+
+
+---
+
+📘 10. TF-IDF
+
+TF-IDF measures how important a word is in a document.
+
+Full form:
+
+TF → Term Frequency
+
+IDF → Inverse Document Frequency
+
+
+Formula idea:
+
+TF = word frequency in document
+
+IDF = importance across documents
+
+
+Meaning:
+
+👉 Common words get less weight
+👉 Rare important words get higher weight
+
+Example:
+
+“the” → low weight
+
+“machine learning” → high weight
+
+
+
+---
+
+📘 11. Data Wrangling
+
+Data wrangling means cleaning and preparing raw data for analysis.
+
+Steps:
+
+Handling missing values
+
+Removing duplicates
+
+Fixing data types
+
+Normalization
+
+Encoding categorical data
+
+
+Key point:
+
+👉 Raw data → clean structured data
+
+
+---
+
+📘 12. Data Preprocessing
+
+Data preprocessing is a broader step before ML models.
+
+Includes:
+
+Data cleaning
+
+Scaling (normalization)
+
+Encoding
+
+Feature selection
+
+Handling outliers
+
+
+Key point:
+
+👉 Makes data ready for machine learning.
+
+
+---
+
+📘 13. Data Analytics
+
+Data analytics is the process of examining data to find useful insights.
+
+Types:
+
+1. Descriptive → what happened
+
+
+2. Diagnostic → why it happened
+
+
+3. Predictive → what will happen
+
+
+4. Prescriptive → what should be done
+
+
+
+Example:
+
+Sales analysis
+
+Customer behavior
+
+
+Key point:
+
+👉 Converts raw data into decisions.
+
+
+---
+
+🎯 QUICK FINAL REVISION (VERY IMPORTANT)
+
+Linear → predict number
+
+Logistic → classification
+
+Outliers → extreme values
+
+Confusion matrix → performance table
+
+Precision → correctness of positive predictions
+
+Recall → how many positives captured
+
+Accuracy → overall correctness
+
+Stemming → rough root
+
+Lemmatization → correct root
+
+TF-IDF → word importance
+
+Wrangling → cleaning data
+
+Preprocessing → preparing data for ML
+
+Analytics → finding insights
+
+
+
+---
+
+If you want, I can also give you: 🔥 1-page ultra-short viva cheat sheet
+🔥 Most asked 25 viva questions with answers
+🔥 Rapid revision before exam (last-minute)

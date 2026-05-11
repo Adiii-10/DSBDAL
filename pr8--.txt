@@ -1,0 +1,512 @@
+Data Visualization I 1. Use the inbuilt dataset 'titanic'. The dataset contains 891 rows and contains information about the passengers who boarded the unfortunate Titanic ship. Use the Seaborn library to see if we can find any patterns in the data. Write a code to check how the price of the ticket (column name: 'fare') for each passenger is distributed by plotting a histogram 
+
+
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# -------------------------------
+# Load Dataset
+# -------------------------------
+df = sns.load_dataset('titanic')
+
+# -------------------------------
+# Data Cleaning
+# -------------------------------
+# Remove missing values in 'fare'
+df = df.dropna(subset=['fare'])
+
+# -------------------------------
+# Plot Histogram
+# -------------------------------
+sns.histplot(data=df, x='fare', bins=30, kde=True)
+
+# -------------------------------
+# Labels and Title
+# -------------------------------
+plt.title('Distribution of Ticket Fare for Titanic Passengers')
+plt.xlabel('Fare (Ticket Price)')
+plt.ylabel('Frequency')
+
+# -------------------------------
+# Show Plot
+# -------------------------------
+plt.show()
+
+
+
+
+
+🔷 Question-wise Explanation
+✅ 1. Load Dataset
+df = sns.load_dataset('titanic')
+
+✔ Loads inbuilt Titanic dataset from Seaborn
+✔ Contains passenger details like age, fare, class, survival
+
+➡️ Dataset size ≈ 891 rows
+
+✅ 2. Data Cleaning
+df = df.dropna(subset=['fare'])
+
+✔ Removes missing values in fare column
+
+✔ Why used:
+
+Missing values can affect visualization
+Ensures accurate histogram
+✅ 3. Histogram Plot
+sns.histplot(data=df, x='fare', bins=30, kde=True)
+
+✔ Creates histogram of ticket prices
+
+🔹 Parameters:
+x='fare' → variable plotted
+bins=30 → number of bars
+kde=True → smooth density curve
+
+✔ Why used:
+➡️ To understand distribution of ticket prices
+
+✅ 4. Labels and Title
+plt.title()
+plt.xlabel()
+plt.ylabel()
+
+✔ Improves readability of graph
+
+✅ 5. Display Plot
+plt.show()
+
+✔ Displays visualization
+
+
+
+
+
+📘 DETAILED THEORY (High-Scoring Answer)
+Introduction
+
+Data visualization is the graphical representation of data used to identify patterns, trends, and insights. In this practical, the Titanic dataset is analyzed using a histogram to understand the distribution of ticket fares.
+
+The Titanic dataset is available as an inbuilt dataset in Seaborn and contains information about passengers such as age, class, fare, and survival status.
+
+Histogram Concept
+
+A histogram is a graphical representation of data distribution that groups values into bins (intervals) and shows their frequency.
+
+Key Components:
+X-axis: Variable (Fare)
+Y-axis: Frequency (number of passengers)
+Bins: Intervals of values
+Kernel Density Estimation (KDE)
+
+KDE is a smooth curve added to the histogram that represents the probability density of the data.
+
+Purpose:
+Provides a smoother view of distribution
+Helps identify skewness
+Data Preprocessing
+
+Before plotting, missing values in the fare column are removed using dropna() to ensure accurate visualization.
+
+Interpretation of Histogram
+From the histogram of Titanic fare:
+.Most passengers paid low fares
+.Few passengers paid very high fares
+.Distribution is right-skewed (positively skewed)
+Meaning of Right Skewness:
+.Tail is towards higher values
+.Majority of data is concentrated on lower side
+
+Insights from Visualization
+Majority of passengers were from lower economic class
+High ticket prices were rare
+Fare distribution is uneven
+
+Advantages of Histogram
+Easy to understand
+Shows distribution clearly
+Helps detect skewness and outliers
+
+Applications
+Data analysis
+Financial analysis
+Customer behavior analysis
+Preprocessing before machine learning
+
+Conclusion
+In this practical, a histogram was plotted to analyze the distribution of ticket fares in the Titanic dataset. The visualization revealed that the fare distribution is highly skewed, with most passengers paying lower fares. Histograms are useful tools for understanding data distribution and identifying patterns.
+
+
+
+
+
+1. Linear Regression
+
+Linear regression is a supervised machine learning algorithm used to predict a continuous numeric value.
+
+It finds a best-fit straight line between input (X) and output (Y).
+
+Equation:
+
+Y = mX + c
+
+Meaning:
+
+X → input (independent variable)
+
+Y → output (dependent variable)
+
+m → slope (change rate)
+
+c → intercept
+
+
+Example:
+
+Predict house price based on number of rooms.
+
+Key point:
+
+👉 It assumes a linear relationship between variables.
+
+
+---
+
+📘 2. Logistic Regression
+
+Logistic regression is used for classification problems (yes/no, 0/1).
+
+It uses the sigmoid function to convert output into probability.
+
+Output range:
+
+0 to 1
+
+Formula idea:
+
+P = \frac{1}{1 + e^{-x}}
+
+Example:
+
+Spam or not spam
+
+Purchased or not purchased
+
+
+Key point:
+
+👉 Despite the name “regression”, it is used for classification.
+
+
+---
+
+📘 3. Outliers
+
+Outliers are data points that are very different from other observations.
+
+Example:
+
+Most ages = 20–40, but one value = 120 → outlier
+
+Detection methods:
+
+IQR method
+
+Z-score method
+
+
+IQR rule:
+
+Below Q1 − 1.5×IQR → outlier
+
+Above Q3 + 1.5×IQR → outlier
+
+
+Key point:
+
+👉 Outliers can distort mean and ML models.
+
+
+---
+
+📘 4. Confusion Matrix
+
+A confusion matrix is used to evaluate classification models.
+
+It shows correct and incorrect predictions.
+
+Structure:
+
+	Predicted Yes	Predicted No
+
+Actual Yes	TP	FN
+Actual No	FP	TN
+
+
+Terms:
+
+TP → True Positive
+
+TN → True Negative
+
+FP → False Positive
+
+FN → False Negative
+
+
+Key point:
+
+👉 It helps measure model performance clearly.
+
+
+---
+
+📘 5. Recall
+
+Recall tells how many actual positives were correctly predicted.
+
+Formula:
+
+Recall = \frac{TP}{TP + FN}
+
+Meaning:
+
+👉 “Out of all real positive cases, how many did we catch?”
+
+Example:
+
+Disease detection → important to avoid missing sick people.
+
+
+---
+
+📘 6. Precision
+
+Precision tells how many predicted positives are actually correct.
+
+Formula:
+
+Precision = \frac{TP}{TP + FP}
+
+Meaning:
+
+👉 “Out of all predicted positives, how many are correct?”
+
+Example:
+
+Spam detection → avoid marking real emails as spam.
+
+
+---
+
+📘 7. Accuracy
+
+Accuracy measures overall correctness.
+
+Formula:
+
+Accuracy = \frac{TP + TN}{Total}
+
+Meaning:
+
+👉 “How many predictions are correct overall?”
+
+Key point:
+
+Works well only when dataset is balanced.
+
+
+---
+
+📘 8. Stemming
+
+Stemming reduces words to their root form (not always meaningful word).
+
+Example:
+
+playing → play
+
+studies → studi
+
+
+Method:
+
+Simply cuts suffixes.
+
+Key point:
+
+👉 Fast but not always accurate.
+
+
+---
+
+📘 9. Lemmatization
+
+Lemmatization also converts words to root form, but uses dictionary meaning.
+
+Example:
+
+playing → play
+
+better → good
+
+
+Key point:
+
+👉 More accurate than stemming.
+
+
+---
+
+📘 10. TF-IDF
+
+TF-IDF measures how important a word is in a document.
+
+Full form:
+
+TF → Term Frequency
+
+IDF → Inverse Document Frequency
+
+
+Formula idea:
+
+TF = word frequency in document
+
+IDF = importance across documents
+
+
+Meaning:
+
+👉 Common words get less weight
+👉 Rare important words get higher weight
+
+Example:
+
+“the” → low weight
+
+“machine learning” → high weight
+
+
+
+---
+
+📘 11. Data Wrangling
+
+Data wrangling means cleaning and preparing raw data for analysis.
+
+Steps:
+
+Handling missing values
+
+Removing duplicates
+
+Fixing data types
+
+Normalization
+
+Encoding categorical data
+
+
+Key point:
+
+👉 Raw data → clean structured data
+
+
+---
+
+📘 12. Data Preprocessing
+
+Data preprocessing is a broader step before ML models.
+
+Includes:
+
+Data cleaning
+
+Scaling (normalization)
+
+Encoding
+
+Feature selection
+
+Handling outliers
+
+
+Key point:
+
+👉 Makes data ready for machine learning.
+
+
+---
+
+📘 13. Data Analytics
+
+Data analytics is the process of examining data to find useful insights.
+
+Types:
+
+1. Descriptive → what happened
+
+
+2. Diagnostic → why it happened
+
+
+3. Predictive → what will happen
+
+
+4. Prescriptive → what should be done
+
+
+
+Example:
+
+Sales analysis
+
+Customer behavior
+
+
+Key point:
+
+👉 Converts raw data into decisions.
+
+
+---
+
+🎯 QUICK FINAL REVISION (VERY IMPORTANT)
+
+Linear → predict number
+
+Logistic → classification
+
+Outliers → extreme values
+
+Confusion matrix → performance table
+
+Precision → correctness of positive predictions
+
+Recall → how many positives captured
+
+Accuracy → overall correctness
+
+Stemming → rough root
+
+Lemmatization → correct root
+
+TF-IDF → word importance
+
+Wrangling → cleaning data
+
+Preprocessing → preparing data for ML
+
+Analytics → finding insights
+
+
+
+---
+
+If you want, I can also give you: 🔥 1-page ultra-short viva cheat sheet
+🔥 Most asked 25 viva questions with answers
+🔥 Rapid revision before exam (last-minute)

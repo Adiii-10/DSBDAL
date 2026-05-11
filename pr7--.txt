@@ -1,0 +1,615 @@
+Text Analytics 1. Extract Sample document and apply following document preprocessing methods: Tokenization, POS Tagging, stop words removal, Stemming and Lemmatization. Create representation of document by calculating Term Frequency and Inverse Document Frequency. 
+
+
+
+import nltk
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# -------------------------------
+# Download Required NLTK Resources
+# -------------------------------
+nltk.download('punkt')
+nltk.download('punkt_tab')
+nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+
+# -------------------------------
+# Sample Document
+# -------------------------------
+document = """The quick brown fox jumps over the lazy dog.
+Dogs are jumping and playing in the garden."""
+
+print("Original Document:", document)
+
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+
+# -------------------------------
+# 1. Tokenization
+# -------------------------------
+tokens = word_tokenize(document.lower())
+print("\nTokens:", tokens)
+
+# -------------------------------
+# 2. POS Tagging
+# -------------------------------
+pos_tags = nltk.pos_tag(tokens)
+print("\nPOS Tags:", pos_tags)
+
+# -------------------------------
+# 3. Stopwords Removal
+# -------------------------------
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [w for w in tokens if w.isalnum() and w not in stop_words]
+print("\nFiltered (No Stopwords):", filtered_tokens)
+
+# -------------------------------
+# 4. Stemming
+# -------------------------------
+ps = PorterStemmer()
+stemmed = [ps.stem(w) for w in filtered_tokens]
+print("\nStemmed:", stemmed)
+
+# -------------------------------
+# 5. Lemmatization
+# -------------------------------
+lemmatizer = WordNetLemmatizer()
+lemmatized = [lemmatizer.lemmatize(w) for w in filtered_tokens]
+print("\nLemmatized:", lemmatized)
+
+# -------------------------------
+# 6. TF-IDF Representation
+# -------------------------------
+docs = [document]
+vectorizer = TfidfVectorizer()
+tfidf_matrix = vectorizer.fit_transform(docs)
+
+df_tfidf = pd.DataFrame(tfidf_matrix.toarray(),
+                        columns=vectorizer.get_feature_names_out())
+
+print("\nTF-IDF Representation:")
+print(df_tfidf)
+
+
+
+
+
+
+🔷 Question-wise Explanation
+✅ 1. Tokenization
+word_tokenize(document.lower())
+
+✔ Splits text into individual words (tokens)
+✔ Converts text to lowercase
+
+✔ Why used:
+➡️ First step in text preprocessing
+
+✅ 2. POS Tagging
+nltk.pos_tag(tokens)
+
+✔ Assigns grammatical tags:
+
+Noun (NN)
+Verb (VB)
+Adjective (JJ)
+
+✔ Why used:
+➡️ Helps understand role of words
+
+✅ 3. Stopwords Removal
+[w for w in tokens if w not in stop_words]
+
+✔ Removes common words like:
+
+the, is, are
+
+✔ Why used:
+➡️ Reduces noise in text
+
+✅ 4. Stemming
+PorterStemmer()
+
+✔ Converts words to root form:
+
+playing → play
+jumping → jump
+
+✔ Why used:
+➡️ Reduces word variations
+
+✅ 5. Lemmatization
+WordNetLemmatizer()
+
+✔ Converts words to meaningful base form:
+
+better than stemming
+
+✔ Why used:
+➡️ Preserves meaning
+
+✅ 6. TF-IDF Representation
+TfidfVectorizer()
+
+✔ Converts text into numerical form
+
+✔ TF = Term Frequency
+✔ IDF = Inverse Document Frequency
+
+✔ Why used:
+➡️ Required for machine learning models
+
+
+
+
+
+
+📘 DETAILED THEORY (High-Scoring Answer)
+Introduction
+
+Text Analytics is the process of extracting meaningful information from textual data. Since machines cannot understand raw text directly, preprocessing techniques are applied to convert text into a structured format. In this practical, various preprocessing steps and TF-IDF representation are implemented.
+
+1. Tokenization
+
+Tokenization is the process of breaking text into smaller units called tokens (words or sentences).
+
+Example:
+“The quick brown fox” → [The, quick, brown, fox]
+
+Importance:
+Basic step in NLP
+Prepares text for further processing
+2. Part-of-Speech (POS) Tagging
+
+POS tagging assigns grammatical labels to each word.
+
+Examples:
+
+NN → Noun
+VB → Verb
+JJ → Adjective
+Importance:
+Helps in understanding sentence structure
+Useful in NLP tasks like parsing and translation
+3. Stopwords Removal
+
+Stopwords are commonly used words that do not carry significant meaning.
+
+Examples:
+
+the, is, in, and
+Importance:
+Reduces dataset size
+Improves processing efficiency
+Removes noise
+4. Stemming
+
+Stemming reduces words to their root form by removing suffixes.
+
+Examples:
+
+playing → play
+running → run
+Advantages:
+Fast and simple
+Reduces dimensionality
+Limitation:
+May produce non-meaningful words
+5. Lemmatization
+
+Lemmatization converts words into their base or dictionary form.
+
+Examples:
+
+better → good
+running → run
+Advantages:
+More accurate than stemming
+Maintains semantic meaning
+6. TF-IDF Representation
+
+TF-IDF is a numerical representation of text that reflects importance of words.
+
+Term Frequency (TF):
+TF=Number of times word appears  /
+Total words
+
+	​
+
+Inverse Document Frequency (IDF):
+IDF=log(Total documents       /
+Documents containing word)
+
+
+
+TF-IDF Formula:
+TF-IDF=TF×IDF
+Importance of TF-IDF
+Assigns higher weight to important words
+Reduces importance of common words
+Converts text into numerical vectors
+Applications of Text Analytics
+Sentiment analysis
+Chatbots
+Search engines
+Document classification
+Conclusion
+
+In this practical, text preprocessing techniques such as tokenization, POS tagging, stopword removal, stemming, and lemmatization were applied. Finally, TF-IDF representation was used to convert text into numerical form. These steps are essential for preparing textual data for machine learning and natural language processing tasks.
+
+
+
+
+
+1. Linear Regression
+
+Linear regression is a supervised machine learning algorithm used to predict a continuous numeric value.
+
+It finds a best-fit straight line between input (X) and output (Y).
+
+Equation:
+
+Y = mX + c
+
+Meaning:
+
+X → input (independent variable)
+
+Y → output (dependent variable)
+
+m → slope (change rate)
+
+c → intercept
+
+
+Example:
+
+Predict house price based on number of rooms.
+
+Key point:
+
+👉 It assumes a linear relationship between variables.
+
+
+---
+
+📘 2. Logistic Regression
+
+Logistic regression is used for classification problems (yes/no, 0/1).
+
+It uses the sigmoid function to convert output into probability.
+
+Output range:
+
+0 to 1
+
+Formula idea:
+
+P = \frac{1}{1 + e^{-x}}
+
+Example:
+
+Spam or not spam
+
+Purchased or not purchased
+
+
+Key point:
+
+👉 Despite the name “regression”, it is used for classification.
+
+
+---
+
+📘 3. Outliers
+
+Outliers are data points that are very different from other observations.
+
+Example:
+
+Most ages = 20–40, but one value = 120 → outlier
+
+Detection methods:
+
+IQR method
+
+Z-score method
+
+
+IQR rule:
+
+Below Q1 − 1.5×IQR → outlier
+
+Above Q3 + 1.5×IQR → outlier
+
+
+Key point:
+
+👉 Outliers can distort mean and ML models.
+
+
+---
+
+📘 4. Confusion Matrix
+
+A confusion matrix is used to evaluate classification models.
+
+It shows correct and incorrect predictions.
+
+Structure:
+
+	Predicted Yes	Predicted No
+
+Actual Yes	TP	FN
+Actual No	FP	TN
+
+
+Terms:
+
+TP → True Positive
+
+TN → True Negative
+
+FP → False Positive
+
+FN → False Negative
+
+
+Key point:
+
+👉 It helps measure model performance clearly.
+
+
+---
+
+📘 5. Recall
+
+Recall tells how many actual positives were correctly predicted.
+
+Formula:
+
+Recall = \frac{TP}{TP + FN}
+
+Meaning:
+
+👉 “Out of all real positive cases, how many did we catch?”
+
+Example:
+
+Disease detection → important to avoid missing sick people.
+
+
+---
+
+📘 6. Precision
+
+Precision tells how many predicted positives are actually correct.
+
+Formula:
+
+Precision = \frac{TP}{TP + FP}
+
+Meaning:
+
+👉 “Out of all predicted positives, how many are correct?”
+
+Example:
+
+Spam detection → avoid marking real emails as spam.
+
+
+---
+
+📘 7. Accuracy
+
+Accuracy measures overall correctness.
+
+Formula:
+
+Accuracy = \frac{TP + TN}{Total}
+
+Meaning:
+
+👉 “How many predictions are correct overall?”
+
+Key point:
+
+Works well only when dataset is balanced.
+
+
+---
+
+📘 8. Stemming
+
+Stemming reduces words to their root form (not always meaningful word).
+
+Example:
+
+playing → play
+
+studies → studi
+
+
+Method:
+
+Simply cuts suffixes.
+
+Key point:
+
+👉 Fast but not always accurate.
+
+
+---
+
+📘 9. Lemmatization
+
+Lemmatization also converts words to root form, but uses dictionary meaning.
+
+Example:
+
+playing → play
+
+better → good
+
+
+Key point:
+
+👉 More accurate than stemming.
+
+
+---
+
+📘 10. TF-IDF
+
+TF-IDF measures how important a word is in a document.
+
+Full form:
+
+TF → Term Frequency
+
+IDF → Inverse Document Frequency
+
+
+Formula idea:
+
+TF = word frequency in document
+
+IDF = importance across documents
+
+
+Meaning:
+
+👉 Common words get less weight
+👉 Rare important words get higher weight
+
+Example:
+
+“the” → low weight
+
+“machine learning” → high weight
+
+
+
+---
+
+📘 11. Data Wrangling
+
+Data wrangling means cleaning and preparing raw data for analysis.
+
+Steps:
+
+Handling missing values
+
+Removing duplicates
+
+Fixing data types
+
+Normalization
+
+Encoding categorical data
+
+
+Key point:
+
+👉 Raw data → clean structured data
+
+
+---
+
+📘 12. Data Preprocessing
+
+Data preprocessing is a broader step before ML models.
+
+Includes:
+
+Data cleaning
+
+Scaling (normalization)
+
+Encoding
+
+Feature selection
+
+Handling outliers
+
+
+Key point:
+
+👉 Makes data ready for machine learning.
+
+
+---
+
+📘 13. Data Analytics
+
+Data analytics is the process of examining data to find useful insights.
+
+Types:
+
+1. Descriptive → what happened
+
+
+2. Diagnostic → why it happened
+
+
+3. Predictive → what will happen
+
+
+4. Prescriptive → what should be done
+
+
+
+Example:
+
+Sales analysis
+
+Customer behavior
+
+
+Key point:
+
+👉 Converts raw data into decisions.
+
+
+---
+
+🎯 QUICK FINAL REVISION (VERY IMPORTANT)
+
+Linear → predict number
+
+Logistic → classification
+
+Outliers → extreme values
+
+Confusion matrix → performance table
+
+Precision → correctness of positive predictions
+
+Recall → how many positives captured
+
+Accuracy → overall correctness
+
+Stemming → rough root
+
+Lemmatization → correct root
+
+TF-IDF → word importance
+
+Wrangling → cleaning data
+
+Preprocessing → preparing data for ML
+
+Analytics → finding insights
+
+
+
+---
+
+If you want, I can also give you: 🔥 1-page ultra-short viva cheat sheet
+🔥 Most asked 25 viva questions with answers
+🔥 Rapid revision before exam (last-minute)

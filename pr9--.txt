@@ -1,0 +1,536 @@
+Data Visualization II 1. Use the inbuilt dataset 'titanic' as used in the above problem. Plot a box plot for distribution of age with respect to each gender along with the information about whether they survived or not. (Column names : 'sex' and 'age') Write observations on the inference from the above statistics. 
+
+
+
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# -------------------------------
+# Load Dataset
+# -------------------------------
+df = sns.load_dataset('titanic')
+
+# -------------------------------
+# Data Cleaning
+# -------------------------------
+# Remove missing values in 'age'
+df = df.dropna(subset=['age'])
+
+# -------------------------------
+# Create Survival Label
+# -------------------------------
+df['survived_status'] = df['survived'].map({0: 'No', 1: 'Yes'})
+
+# -------------------------------
+# Box Plot
+# -------------------------------
+sns.boxplot(data=df, x='sex', y='age', hue='survived_status')
+
+# -------------------------------
+# Labels and Title
+# -------------------------------
+plt.title('Age Distribution by Gender and Survival Status')
+plt.xlabel('Gender')
+plt.ylabel('Age')
+
+# -------------------------------
+# Show Plot
+# -------------------------------
+plt.show()
+
+
+
+
+
+🔷 Question-wise Explanation
+✅ 1. Load Dataset
+df = sns.load_dataset('titanic')
+
+✔ Loads Titanic dataset
+✔ Contains features like age, sex, survival
+
+✅ 2. Data Cleaning
+df = df.dropna(subset=['age'])
+
+✔ Removes missing age values
+
+✔ Why used:
+
+Boxplot needs valid numeric values
+✅ 3. Create Survival Column
+df['survived_status'] = df['survived'].map({0: 'No', 1: 'Yes'})
+
+✔ Converts numeric to categorical
+
+✔ Why used:
+
+Makes visualization readable
+✅ 4. Box Plot
+sns.boxplot(data=df, x='sex', y='age', hue='survived_status')
+
+✔ Displays distribution of age
+
+🔹 Axes:
+X → Gender
+Y → Age
+Hue → Survival status
+
+✔ Why used:
+➡️ Compare age distribution across categories
+
+✅ 5. Labels and Title
+
+✔ Improves clarity
+
+✅ 6. Show Plot
+
+✔ Displays graph
+
+
+
+
+
+
+📘 DETAILED THEORY (High-Scoring Answer)
+Introduction
+
+Data visualization helps in understanding patterns and relationships in data. In this practical, a box plot is used to analyze the distribution of age with respect to gender and survival status in the Titanic dataset.
+
+Box Plot Concept
+
+A box plot (box-and-whisker plot) is used to visualize the distribution of data based on five-number summary:
+
+Five-Number Summary:
+Minimum
+Q1 (25th percentile)
+Median (Q2)
+Q3 (75th percentile)
+Maximum
+
+Components of Box Plot
+Box: Represents interquartile range (Q1 to Q3)
+Line inside box: Median
+Whiskers: Extend to min and max
+Outliers: Points outside whiskers
+
+Data Preprocessing
+Missing values in the age column are removed using dropna() to ensure accurate plotting.
+
+The survived column is converted into categorical labels (Yes / No) for better visualization.
+
+Visualization Explanation
+
+The box plot is plotted with:
+
+X-axis → Gender (male/female)
+Y-axis → Age
+Hue → Survival status
+
+This allows comparison of:
+
+Age distribution by gender
+Survival impact on age
+🔷 📊 Observations (VERY IMPORTANT FOR EXAM)
+🔹 1. Gender-wise Distribution
+Female passengers show different age distribution compared to males
+Median age of males is generally slightly higher
+🔹 2. Survival Pattern
+More females survived compared to males
+Indicates priority given to women
+🔹 3. Age Factor
+Younger passengers had higher survival chances
+Children were more likely to survive
+🔹 4. Spread of Data
+Wide spread of age values
+Presence of outliers (very young or very old passengers)
+🔹 5. Median Comparison
+Survivors tend to have slightly lower median age
+🔹 6. Key Insight
+
+➡️ “Women and children were given priority during rescue operations”
+
+Advantages of Box Plot
+Shows distribution clearly
+Identifies outliers
+Compares multiple categories
+Applications
+Data analysis
+Statistical comparison
+Detecting skewness
+Conclusion
+
+In this practical, a box plot was used to analyze the age distribution of Titanic passengers based on gender and survival status. The visualization revealed that females and younger passengers had higher survival rates. Box plots are effective tools for comparing distributions and identifying patterns in data.
+
+
+
+
+
+1. Linear Regression
+
+Linear regression is a supervised machine learning algorithm used to predict a continuous numeric value.
+
+It finds a best-fit straight line between input (X) and output (Y).
+
+Equation:
+
+Y = mX + c
+
+Meaning:
+
+X → input (independent variable)
+
+Y → output (dependent variable)
+
+m → slope (change rate)
+
+c → intercept
+
+
+Example:
+
+Predict house price based on number of rooms.
+
+Key point:
+
+👉 It assumes a linear relationship between variables.
+
+
+---
+
+📘 2. Logistic Regression
+
+Logistic regression is used for classification problems (yes/no, 0/1).
+
+It uses the sigmoid function to convert output into probability.
+
+Output range:
+
+0 to 1
+
+Formula idea:
+
+P = \frac{1}{1 + e^{-x}}
+
+Example:
+
+Spam or not spam
+
+Purchased or not purchased
+
+
+Key point:
+
+👉 Despite the name “regression”, it is used for classification.
+
+
+---
+
+📘 3. Outliers
+
+Outliers are data points that are very different from other observations.
+
+Example:
+
+Most ages = 20–40, but one value = 120 → outlier
+
+Detection methods:
+
+IQR method
+
+Z-score method
+
+
+IQR rule:
+
+Below Q1 − 1.5×IQR → outlier
+
+Above Q3 + 1.5×IQR → outlier
+
+
+Key point:
+
+👉 Outliers can distort mean and ML models.
+
+
+---
+
+📘 4. Confusion Matrix
+
+A confusion matrix is used to evaluate classification models.
+
+It shows correct and incorrect predictions.
+
+Structure:
+
+	Predicted Yes	Predicted No
+
+Actual Yes	TP	FN
+Actual No	FP	TN
+
+
+Terms:
+
+TP → True Positive
+
+TN → True Negative
+
+FP → False Positive
+
+FN → False Negative
+
+
+Key point:
+
+👉 It helps measure model performance clearly.
+
+
+---
+
+📘 5. Recall
+
+Recall tells how many actual positives were correctly predicted.
+
+Formula:
+
+Recall = \frac{TP}{TP + FN}
+
+Meaning:
+
+👉 “Out of all real positive cases, how many did we catch?”
+
+Example:
+
+Disease detection → important to avoid missing sick people.
+
+
+---
+
+📘 6. Precision
+
+Precision tells how many predicted positives are actually correct.
+
+Formula:
+
+Precision = \frac{TP}{TP + FP}
+
+Meaning:
+
+👉 “Out of all predicted positives, how many are correct?”
+
+Example:
+
+Spam detection → avoid marking real emails as spam.
+
+
+---
+
+📘 7. Accuracy
+
+Accuracy measures overall correctness.
+
+Formula:
+
+Accuracy = \frac{TP + TN}{Total}
+
+Meaning:
+
+👉 “How many predictions are correct overall?”
+
+Key point:
+
+Works well only when dataset is balanced.
+
+
+---
+
+📘 8. Stemming
+
+Stemming reduces words to their root form (not always meaningful word).
+
+Example:
+
+playing → play
+
+studies → studi
+
+
+Method:
+
+Simply cuts suffixes.
+
+Key point:
+
+👉 Fast but not always accurate.
+
+
+---
+
+📘 9. Lemmatization
+
+Lemmatization also converts words to root form, but uses dictionary meaning.
+
+Example:
+
+playing → play
+
+better → good
+
+
+Key point:
+
+👉 More accurate than stemming.
+
+
+---
+
+📘 10. TF-IDF
+
+TF-IDF measures how important a word is in a document.
+
+Full form:
+
+TF → Term Frequency
+
+IDF → Inverse Document Frequency
+
+
+Formula idea:
+
+TF = word frequency in document
+
+IDF = importance across documents
+
+
+Meaning:
+
+👉 Common words get less weight
+👉 Rare important words get higher weight
+
+Example:
+
+“the” → low weight
+
+“machine learning” → high weight
+
+
+
+---
+
+📘 11. Data Wrangling
+
+Data wrangling means cleaning and preparing raw data for analysis.
+
+Steps:
+
+Handling missing values
+
+Removing duplicates
+
+Fixing data types
+
+Normalization
+
+Encoding categorical data
+
+
+Key point:
+
+👉 Raw data → clean structured data
+
+
+---
+
+📘 12. Data Preprocessing
+
+Data preprocessing is a broader step before ML models.
+
+Includes:
+
+Data cleaning
+
+Scaling (normalization)
+
+Encoding
+
+Feature selection
+
+Handling outliers
+
+
+Key point:
+
+👉 Makes data ready for machine learning.
+
+
+---
+
+📘 13. Data Analytics
+
+Data analytics is the process of examining data to find useful insights.
+
+Types:
+
+1. Descriptive → what happened
+
+
+2. Diagnostic → why it happened
+
+
+3. Predictive → what will happen
+
+
+4. Prescriptive → what should be done
+
+
+
+Example:
+
+Sales analysis
+
+Customer behavior
+
+
+Key point:
+
+👉 Converts raw data into decisions.
+
+
+---
+
+🎯 QUICK FINAL REVISION (VERY IMPORTANT)
+
+Linear → predict number
+
+Logistic → classification
+
+Outliers → extreme values
+
+Confusion matrix → performance table
+
+Precision → correctness of positive predictions
+
+Recall → how many positives captured
+
+Accuracy → overall correctness
+
+Stemming → rough root
+
+Lemmatization → correct root
+
+TF-IDF → word importance
+
+Wrangling → cleaning data
+
+Preprocessing → preparing data for ML
+
+Analytics → finding insights
+
+
+
+---
+
+If you want, I can also give you: 🔥 1-page ultra-short viva cheat sheet
+🔥 Most asked 25 viva questions with answers
+🔥 Rapid revision before exam (last-minute)
